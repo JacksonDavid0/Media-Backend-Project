@@ -8,7 +8,7 @@ function handleError(req, res, error) {
       status: status,
       code: error.code || "INTERNAL_SERVER_ERROR",
       message: error.message || "An unexpected error occurred.",
-      details: error.details || undefined,
+      details: error.details || [],
       timestamp: new Date().toISOString(),
       path: req.originalUrl,
     },
