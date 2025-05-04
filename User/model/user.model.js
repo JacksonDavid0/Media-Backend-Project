@@ -160,7 +160,9 @@ userSchema.pre("save", async (next) => {
     this.firstname = firstname;
     this.lastname = lastname;
   }
+  console.log(this.password, "password");
   const salt = await bcrypt.genSalt(10);
+  console.log(salt, "salt");
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
