@@ -39,7 +39,7 @@ async function register(
       Message:
         "We've sent a verification link to your email. Please activate/verify your account.",
     };
-  } catch (err) {
+  } catch (error) {
     throw new Error(error);
   }
 }
