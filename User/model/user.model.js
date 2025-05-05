@@ -159,8 +159,10 @@ userSchema.pre("save", async (next) => {
       this.lastname.toString().slice(1).toLowercase();
     this.firstname = firstname;
     this.lastname = lastname;
+    console.log("before hash password");
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
+    console.log(this.password);
   }
   next();
 });
