@@ -1,5 +1,10 @@
 const handleError = require("../middleware/errorHandler");
-const { register, verify, login } = require("../services/user.service");
+const {
+  register,
+  verify,
+  login,
+  getUserProfile,
+} = require("../services/user.service");
 
 async function registerUser(req, res) {
   const {
