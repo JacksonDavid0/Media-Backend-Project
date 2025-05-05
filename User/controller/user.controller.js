@@ -62,6 +62,18 @@ async function loginUser(req, res) {
   }
 }
 
+async function userProfile(req, res) {
+  const { username } = req.params;
+  const userId = req.authorizeUserId;
+  try {
+    const user = await getUserProfile(username, userId);
+    res.status(200).send(user.Data);
+    console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
 async function logoutUser(req, res) {
   res.clearCookie("userToken", {
     httpOnly: true,

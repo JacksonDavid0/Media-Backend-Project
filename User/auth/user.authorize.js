@@ -1,51 +1,21 @@
-const handleError = require("../middleware/errorHandler");
 const User = require("../model/user.model");
-require("dotenv").config();
 
-const secret = process.env.SECRET;
+async function authorizeUser(req, res, next) {
+  const authToken = req.cookies.userToken;
 
-async function authUser(req, res, next) {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      const error = {
-        status: 401,
-        code: "AUTHENTICATION_FAILED",
-        message: "Invalid email or password",
-        details: [],
-      };
-      handleError(req, res, error);
-    }
-    const match = user.comparePassword(password);
-
-    if (!match) {
-      const error = {
-        status: 401,
-        code: "AUTHENTICATION_FAILED",
-        message: "Invalid email or password",
-        details: [],
-      };
-      handleError(req, res, error);
-    }
-
-    if (user.verified === false) {
-      const error = {
-        status: 403,
-        code: "ACCOUNT_NOT_VERIFIED",
-        message:
-          "Your account is not verified. Please check your email to complete verification.",
-        details: [],
-      };
-      handleError(req, res, error);
-    }
-    console.log("user verified");
-    next();
-  } catch (error) {
-    console.error("Error verifying user:", error);
-    handleError(req, res, error);
+  if (!authToken) {
+    const error = {
+      status: 401,
+      code: "Authorization_Error",
+      message: "Unathorized access token",
+      details: [],
+    };
   }
+
+  const token = authToken;
+  const userId = User.verifyToken(token);
+  req.authorizeUserId = userId;
+  next();
 }
 
-module.exports = { authUser };
+module.exports = { authorizeUser };

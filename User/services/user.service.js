@@ -88,10 +88,60 @@ async function login(email) {
     const user = await User.findOne({ email });
     const token = await user.generateToken("7d");
     return {
-      Data: _.omit(user, ["password", "__v"]),
+      Data: _.omit(user, [
+        "_id",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]),
       Token: token,
       Message: "User logged in successfully.",
     };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+async function getUserProfile(username, userId) {
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      const error = {
+        status: 404,
+        code: "USER_NOT_FOUND",
+        message: "User not found",
+        details: [],
+      };
+      throw new Error(error);
+    }
+    if (user._id.toString() !== userId) {
+      return {
+        Data: _.omit(user, [
+          "_id",
+          "email",
+          "password",
+          "role",
+          "verified",
+          "createdAt",
+          "__v",
+        ]),
+        Message: "User profile retrieved successfully.",
+      };
+    } else if (user._id.toString() === userId) {
+      return {
+        Data: _.omit(user, [
+          "_id",
+          "password",
+          "role",
+          "verified",
+          "createdAt",
+          "__v",
+        ]),
+        Message: "User profile retrieved successfully.",
+      };
+    }
   } catch (error) {
     throw new Error(error);
   }
@@ -101,4 +151,5 @@ module.exports = {
   register,
   verify,
   login,
+  getUserProfile,
 };
