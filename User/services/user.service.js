@@ -51,13 +51,13 @@ async function verify(token, userId) {
     const user = await User.findOne({ _id: userId });
     if (!user) {
       return {
-        Data: expiredVerificationLink(),
+        Data: await expiredVerificationLink(),
         Message: "User verification expired",
       };
     }
     if (user.verified) {
       return {
-        Data: activatedVerificationLink(user.username),
+        Data: await activatedVerificationLink(user.username),
         Message: "User already verified",
       };
     }
@@ -65,7 +65,7 @@ async function verify(token, userId) {
     const userToken = await User.verifyToken(token);
     if (!userToken) {
       return {
-        Data: expiredVerificationLink(),
+        Data: await expiredVerificationLink(),
         Message: "User verification expired",
       };
     }
@@ -75,7 +75,7 @@ async function verify(token, userId) {
     });
 
     return {
-      Data: activatedVerificationLink(updatedUser.username),
+      Data: await activatedVerificationLink(updatedUser.username),
       Message: "User verified successfully.",
     };
   } catch (error) {
