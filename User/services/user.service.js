@@ -18,6 +18,8 @@ async function register(
   address,
   password
 ) {
+  console.log(password);
+
   try {
     const user = new User({
       username: username,
