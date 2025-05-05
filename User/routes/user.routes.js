@@ -9,7 +9,7 @@ const { authenticateUser } = require("../auth/user.authenticate");
 const { authUser } = require("../auth/user.authorize");
 
 userRouter.post("/register", authenticateUser, registerUser);
-userRouter.get("/verifyUser/:token", verifyUser);
+userRouter.get("/verifyUser/signature=:userId&:token", verifyUser);
 userRouter.post("/login", authUser, loginUser);
 
 module.exports = userRouter;

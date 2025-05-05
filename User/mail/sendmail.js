@@ -15,12 +15,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendActivationLink(username, email, token) {
+async function sendActivationLink(username, userId, email, token) {
   // console.log(process.env.Email);
   try {
     const subject = "Account Verification";
 
-    const html = activateEmail(username, token);
+    const html = activateEmail(username, userId, token);
 
     const info = await transporter.sendMail({
       from: process.env.Email, // sender address

@@ -35,7 +35,7 @@ async function register(
     await user.save();
     scheduleUserDelete(user._id);
     const token = await user.generateToken("24h");
-    await sendActivationLink(user.username, user.email, token);
+    await sendActivationLink(user.username, user._id, user.email, token);
     return {
       Data: `User: ${user.username} registered successfully.`,
       Message:
@@ -46,25 +46,36 @@ async function register(
   }
 }
 
-async function verify(token) {
+async function verify(token, userId) {
   try {
-    const userId = await User.verifyToken(token);
-    if (!userId) {
-      return {
-        Data: expiredVerificationLink(),
-        Message: "User verification expired",
-      };
-    }
-    const user = await User.findByIdAndUpdate(userId, { verified: true });
+    const user = await User.findOne({ _id: userId });
     if (!user) {
       return {
         Data: expiredVerificationLink(),
         Message: "User verification expired",
       };
     }
+    if (user.verified) {
+      return {
+        Data: activatedVerificationLink(user.username),
+        Message: "User already verified",
+      };
+    }
+
+    const userToken = await User.verifyToken(token);
+    if (!userToken) {
+      return {
+        Data: expiredVerificationLink(),
+        Message: "User verification expired",
+      };
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      verified: true,
+    });
 
     return {
-      Data: activatedVerificationLink(user.username),
+      Data: activatedVerificationLink(updatedUser.username),
       Message: "User verified successfully.",
     };
   } catch (error) {

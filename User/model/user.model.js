@@ -150,8 +150,6 @@ userSchema.statics.verifyToken = async function (token) {
 };
 
 userSchema.pre("save", async function (next) {
-  console.log(this.firstname, this.lastname, this.password);
-
   const firstname =
     this.firstname.slice(0, 1).toUpperCase() +
     this.firstname.slice(1).toLowerCase();

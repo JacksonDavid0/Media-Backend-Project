@@ -1,6 +1,6 @@
 // require("dotenv").config();
 
-const activateEmail = (username, token) => {
+const activateEmail = (username, userId, token) => {
   const link = process.env.Link;
 
   return `<!DOCTYPE html>
@@ -139,7 +139,7 @@ const activateEmail = (username, token) => {
           </p>
 
           <p style="text-align: center; margin: 30px 0">
-            <a href="http://${link}/verifyUser/${token}" class="button"
+            <a href="http://${link}/verifyUser/signature=${userId}&${token}" class="button"
               >Verify Email Address</a
             >
           </p>

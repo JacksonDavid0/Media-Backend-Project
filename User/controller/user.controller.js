@@ -34,9 +34,9 @@ async function registerUser(req, res) {
 }
 
 async function verifyUser(req, res) {
-  const { token } = req.params;
+  const { token, userId } = req.params;
   try {
-    const user = await verify(token);
+    const user = await verify(token, userId);
     res.status(200).send(user.Data);
     console.log(user.Message);
   } catch (error) {
