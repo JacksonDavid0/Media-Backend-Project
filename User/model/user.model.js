@@ -153,28 +153,26 @@ userSchema.pre("save", async function (next) {
   console.log(this.firstname, this.lastname, this.password);
 
   const firstname =
-    this.firstname.slice(0, 1).toUppercase() +
-    this.firstname.slice(1).toLowercase();
+    this.firstname.slice(0, 1).toUpperCase() +
+    this.firstname.slice(1).toLowerCase();
   const lastname =
-    this.lastname.slice(0, 1).toUppercase() +
-    this.lastname.slice(1).toLowercase();
+    this.lastname.slice(0, 1).toUpperCase() +
+    this.lastname.slice(1).toLowerCase();
   this.firstname = firstname;
   this.lastname = lastname;
-  console.log("before hash password");
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  console.log(this.password);
   next();
 });
 
 userSchema.pre("findOneAndUpdate", async (next) => {
   if (this.firstname && this.lastname) {
     const firstname =
-      this.firstname.slice(0, 1).toUppercase() +
-      this.firstname.slice(1).toLowercase();
+      this.firstname.slice(0, 1).toUpperCase() +
+      this.firstname.slice(1).toLowerCase();
     const lastname =
-      this.lastname.slice(0, 1).toUppercase() +
-      this.lastname.slice(1).toLowercase();
+      this.lastname.slice(0, 1).toUpperCase() +
+      this.lastname.slice(1).toLowerCase();
     this.firstname = firstname;
     this.lastname = lastname;
   }
