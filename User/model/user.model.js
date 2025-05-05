@@ -149,21 +149,19 @@ userSchema.statics.verifyToken = async function (token) {
   }
 };
 
-userSchema.pre("save", async (next) => {
-  if (this.firstname && this.lastname && this.password) {
-    const firstname =
-      this.firstname.toString().slice(0, 1).toUppercase() +
-      this.firstname.toString().slice(1).toLowercase();
-    const lastname =
-      this.lastname.toString().slice(0, 1).toUppercase() +
-      this.lastname.toString().slice(1).toLowercase();
-    this.firstname = firstname;
-    this.lastname = lastname;
-    console.log("before hash password");
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    console.log(this.password);
-  }
+userSchema.pre("save", async function name(params) {
+  const firstname =
+    this.firstname.toString().slice(0, 1).toUppercase() +
+    this.firstname.toString().slice(1).toLowercase();
+  const lastname =
+    this.lastname.toString().slice(0, 1).toUppercase() +
+    this.lastname.toString().slice(1).toLowercase();
+  this.firstname = firstname;
+  this.lastname = lastname;
+  console.log("before hash password");
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  console.log(this.password);
   next();
 });
 
