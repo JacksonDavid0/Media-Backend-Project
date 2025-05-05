@@ -105,8 +105,8 @@ async function login(email) {
 }
 
 async function getUserProfile(username, userId) {
+  const user = await User.findOne({ username });
   try {
-    const user = await User.findOne({ username });
     if (!user) {
       const error = {
         status: 404,
