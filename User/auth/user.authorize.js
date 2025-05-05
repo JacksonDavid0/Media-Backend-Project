@@ -1,5 +1,5 @@
 const handleError = require("../middleware/errorHandler");
-const { User } = require("../model/user.model");
+const User = require("../model/user.model");
 require("dotenv").config();
 
 const secret = process.env.SECRET;
