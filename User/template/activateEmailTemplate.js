@@ -46,6 +46,7 @@ const activateEmail = (username, userId, token) => {
         margin-bottom: 20px;
       }
       .content p {
+      color: black;
           margin-bottom: 15px;
         }
       .button {
