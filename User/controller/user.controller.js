@@ -83,4 +83,10 @@ async function logoutUser(req, res) {
   res.status(200).json({ message: "User logged out successfully." });
 }
 
-module.exports = { registerUser, verifyUser, loginUser, logoutUser };
+module.exports = {
+  registerUser,
+  verifyUser,
+  loginUser,
+  userProfile,
+  logoutUser,
+};
