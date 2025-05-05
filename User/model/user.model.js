@@ -149,13 +149,13 @@ userSchema.statics.verifyToken = async function (token) {
   }
 };
 
-userSchema.pre("save", async function name(params) {
+userSchema.pre("save", async function (next) {
   const firstname =
-    this.firstname.toString().slice(0, 1).toUppercase() +
-    this.firstname.toString().slice(1).toLowercase();
+    this.firstname.slice(0, 1).toUppercase() +
+    this.firstname.slice(1).toLowercase();
   const lastname =
-    this.lastname.toString().slice(0, 1).toUppercase() +
-    this.lastname.toString().slice(1).toLowercase();
+    this.lastname.slice(0, 1).toUppercase() +
+    this.lastname.slice(1).toLowercase();
   this.firstname = firstname;
   this.lastname = lastname;
   console.log("before hash password");
@@ -168,11 +168,11 @@ userSchema.pre("save", async function name(params) {
 userSchema.pre("findOneAndUpdate", async (next) => {
   if (this.firstname && this.lastname) {
     const firstname =
-      this.firstname.toString().slice(0, 1).toUppercase() +
-      this.firstname.toString().slice(1).toLowercase();
+      this.firstname.slice(0, 1).toUppercase() +
+      this.firstname.slice(1).toLowercase();
     const lastname =
-      this.lastname.toString().slice(0, 1).toUppercase() +
-      this.lastname.toString().slice(1).toLowercase();
+      this.lastname.slice(0, 1).toUppercase() +
+      this.lastname.slice(1).toLowercase();
     this.firstname = firstname;
     this.lastname = lastname;
   }
