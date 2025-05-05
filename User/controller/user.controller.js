@@ -62,4 +62,13 @@ async function loginUser(req, res) {
   }
 }
 
-module.exports = { registerUser, verifyUser, loginUser };
+async function logoutUser(req, res) {
+  res.clearCookie("userToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+  });
+  res.status(200).json({ message: "User logged out successfully." });
+}
+
+module.exports = { registerUser, verifyUser, loginUser, logoutUser };
