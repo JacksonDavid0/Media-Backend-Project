@@ -7,7 +7,7 @@ const secret = process.env.SECRET;
 async function authUser(req, res, next) {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne(email);
+    const user = await User.findOne({ email });
 
     if (!user) {
       const error = {
