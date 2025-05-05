@@ -52,7 +52,7 @@ const activateEmail = (username, userId, token) => {
       .button {
         display: inline-block;
         background-color: #007bff; /* Example button color */
-        color: #ffffff;
+        color: white;
         padding: 12px 25px; /* Slightly larger padding for button */
         text-decoration: none;
         border-radius: 5px;
@@ -139,7 +139,7 @@ const activateEmail = (username, userId, token) => {
             exploring content, we need you to verify your email address.
           </p>
 
-          <p style="text-align: center; margin: 30px 0">
+          <p style="text-align: center; margin: 30px 0; color: white">
             <a href="http://${link}/verifyUser/signature=${userId}&${token}" class="button"
               >Verify Email Address</a
             >

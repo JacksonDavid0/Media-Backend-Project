@@ -85,7 +85,7 @@ async function verify(token, userId) {
 
 async function login(email) {
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne(email);
     const token = await user.generateToken("7d");
     return {
       Data: _.omit(user, ["password", "__v"]),
