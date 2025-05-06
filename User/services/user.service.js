@@ -117,7 +117,7 @@ async function getUserProfile(username, userId) {
       throw new Error(error);
     }
 
-    console.log(user._id.toString(), userId);
+    console.log(user._id.toString(), userId.toString());
 
     if (user._id.toString() !== userId) {
       return {
