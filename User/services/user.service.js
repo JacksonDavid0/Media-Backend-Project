@@ -116,6 +116,9 @@ async function getUserProfile(username, userId) {
       };
       throw new Error(error);
     }
+
+    console.log(user._id.toString(), userId);
+
     if (user._id.toString() !== userId) {
       return {
         Data: _.omit(user, [
