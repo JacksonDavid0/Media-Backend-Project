@@ -1,6 +1,6 @@
-// require("dotenv").config();
+require("dotenv").config();
 const expiredVerification = () => {
-  const link = process.env.Link;
+  const link = process.env.REMOTE_Link;
   return `
     <!DOCTYPE html>
 <html lang="en">

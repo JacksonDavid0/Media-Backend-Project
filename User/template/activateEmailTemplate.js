@@ -1,7 +1,7 @@
-// require("dotenv").config();
+require("dotenv").config();
 
 const activateEmail = (username, userId, token) => {
-  const link = process.env.Link;
+  const link = process.env.REMOTE_Link;
 
   return `<!DOCTYPE html>
 <html>

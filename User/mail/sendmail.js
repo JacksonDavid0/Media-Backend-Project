@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const activateEmail = require("../template/activateEmailTemplate");
 const expiredVerification = require("../template/expiredVerificationTemplate");
 const verifiedEmail = require("../template/verifiedEmailTemplate");
-// require("dotenv").config();
+require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com", //"localhost",
