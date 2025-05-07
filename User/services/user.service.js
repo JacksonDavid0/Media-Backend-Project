@@ -114,7 +114,7 @@ async function getUserProfile(username, userId) {
     if (user._id.toString() != userId.toString()) {
       return {
         Data: _.omit(user, [
-          _id,
+          user._id,
           email,
           password,
           role,
