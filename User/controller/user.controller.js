@@ -21,6 +21,17 @@ async function registerUser(req, res) {
   } = req.body;
 
   try {
+    await dataValidator({
+      username,
+      firstname,
+      lastname,
+      gender,
+      email,
+      phone,
+      dob,
+      address,
+      password,
+    });
     const user = await register(
       username,
       firstname,
@@ -53,6 +64,7 @@ async function verifyUser(req, res) {
 async function loginUser(req, res) {
   const { email } = req.body;
   try {
+    await dataValidator({ email });
     const user = await login(email);
     res.cookie("userToken", user.Token, {
       httpOnly: true,
@@ -71,16 +83,11 @@ async function loginUser(req, res) {
 async function userProfile(req, res) {
   const { username } = req.params;
   const userId = req.authorizeUserId;
-  const email = "email@example";
   try {
-    const validate = await dataValidator({ username, email });
-    console.log(validate);
-
-    if (validate) {
-      const user = await getUserProfile(username, userId);
-      console.log(user.Message);
-      return res.status(200).send(user.Data);
-    }
+    await dataValidator({ username });
+    const user = await getUserProfile(username, userId);
+    console.log(user.Message);
+    return res.status(200).send(user.Data);
   } catch (error) {
     handleError(req, res, error);
   }
