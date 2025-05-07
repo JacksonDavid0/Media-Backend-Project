@@ -111,22 +111,45 @@ async function getUserProfile(username, userId) {
       throw new Error(error);
     }
 
+    console.log(user._id, userId);
+
+    // console.log(
+    //   _.omit(user, [
+    //     _id,
+    //     email,
+    //     "password,
+    //     "role",
+    //     "verified",
+    //     "createdAt",
+    //     "__v",
+    //   ])
+    // );
+
     if (user._id.toString() != userId.toString()) {
-      return {
-        Data: _.omit(user, [
-          user._id,
-          user.email,
-          user.password,
-          user.role,
-          user.verified,
-          user.createdAt,
-          user.__v,
-        ]),
-        Message: "User profile retrieved successfully.",
-      };
+      // return {
+      //   Data: _.omit(user, [
+      //     "_id",
+      //     "email",
+      //     "password",
+      //     "role",
+      //     "verified",
+      //     "createdAt",
+      //     "__v",
+      //   ]),
+      //   Message: "User profile retrieved successfully.",
+      // };\
+
+      return { Data: user.email };
     } else if (user._id.toString() == userId.toString()) {
       return {
-        Data: _.omit(user, [_id, password, role, verified, createdAt, __v]),
+        Data: _.omit(user, [
+          "_id",
+          "password",
+          "role",
+          "verified",
+          "createdAt",
+          "__v",
+        ]),
         Message: "User profile retrieved successfully.",
       };
     }
