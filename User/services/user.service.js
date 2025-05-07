@@ -115,12 +115,12 @@ async function getUserProfile(username, userId) {
       return {
         Data: _.omit(user, [
           user._id,
-          email,
-          password,
-          role,
-          verified,
-          createdAt,
-          __v,
+          user.email,
+          user.password,
+          user.role,
+          user.verified,
+          user.createdAt,
+          user.__v,
         ]),
         Message: "User profile retrieved successfully.",
       };
