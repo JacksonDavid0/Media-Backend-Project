@@ -88,14 +88,7 @@ async function login(email) {
     const user = await User.findOne({ email });
     const token = await user.generateToken("7d");
     return {
-      Data: _.omit(user, [
-        "_id",
-        "password",
-        "role",
-        "verified",
-        "createdAt",
-        "__v",
-      ]),
+      Data: _.omit(user, ["_id", "password", "__v"]),
       Token: token,
       Message: "User logged in successfully.",
     };
@@ -105,7 +98,7 @@ async function login(email) {
 }
 
 async function getUserProfile(username, userId) {
-  console.log(typeof userId);
+  console.log(userId);
   try {
     const user = await User.findOne({ username });
     if (!user) {
@@ -118,31 +111,22 @@ async function getUserProfile(username, userId) {
       throw new Error(error);
     }
 
-    console.log(user._id.toString(), userId);
-
-    if (user._id.toString() !== userId) {
+    if (user._id.toString() != userId.toString()) {
       return {
         Data: _.omit(user, [
-          "_id",
-          "email",
-          "password",
-          "role",
-          "verified",
-          "createdAt",
-          "__v",
+          _id,
+          email,
+          password,
+          role,
+          verified,
+          createdAt,
+          __v,
         ]),
         Message: "User profile retrieved successfully.",
       };
-    } else if (user._id.toString() === userId) {
+    } else if (user._id.toString() == userId.toString()) {
       return {
-        Data: _.omit(user, [
-          "_id",
-          "password",
-          "role",
-          "verified",
-          "createdAt",
-          "__v",
-        ]),
+        Data: _.omit(user, [_id, password, role, verified, createdAt, __v]),
         Message: "User profile retrieved successfully.",
       };
     }
