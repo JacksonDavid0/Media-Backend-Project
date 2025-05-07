@@ -7,7 +7,10 @@ const cookieParser = require("cookie-parser");
 const userRouter = require("./User/routes/user.routes");
 const postRouter = require("./Post/routes/post.routes");
 const { startAgenda } = require("./User/tasks/user.agenda");
-// require("dotenv").config();
+require("dotenv").config();
+const remoteDbUrl = process.env.REMOTE_DB_URL;
+const localDbUrl = process.env.LOCAL_DB_URL;
+
 const port = process.env.PORT;
 
 // Middleware for parsing JSON requests
@@ -32,15 +35,30 @@ const maildev = new MailDev({
   web: 3080, // Web UI
 });
 
-// Connect to MongoDB database
-mongoose
-  .connect(process.env.Mongo_ConnectionLink)
-  .then(() => {
-    console.log("Connected to MongoDB...");
-  })
-  .catch((err) => {
-    console.log("Failed to connect to MongoDB", err);
-  });
+// Function to connect to the database
+const connectToDatabase = async (dbUrl) => {
+  try {
+    await mongoose.connect(dbUrl);
+    console.log(`Connected to MongoDB at ${dbUrl}`);
+    return true; // Indicate successful connection
+  } catch (err) {
+    console.error(`Failed to connect to MongoDB at ${dbUrl}`);
+    return false; // Indicate failed connection
+  }
+};
+
+// Connect to the database
+connectToDatabase(remoteDbUrl).then((connected) => {
+  if (!connected) {
+    console.log("Remote connection failed, attempting local connection...");
+    connectToDatabase(localDbUrl).then((localConnected) => {
+      if (!localConnected) {
+        console.error("Both remote and local connections failed. Exiting.");
+        process.exit(1); // Exit with an error code
+      }
+    });
+  }
+});
 
 // Start Agenda
 startAgenda();

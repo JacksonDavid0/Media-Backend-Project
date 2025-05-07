@@ -1,7 +1,7 @@
-// require("dotenv").config();
+require("dotenv").config();
 
 const verifiedEmail = (username) => {
-  const link = process.env.link;
+  const link = process.env.REMOTE_Link;
   return `
     <!DOCTYPE html>
 <html lang="en">

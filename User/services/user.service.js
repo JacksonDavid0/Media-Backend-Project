@@ -105,7 +105,7 @@ async function login(email) {
 }
 
 async function getUserProfile(username, userId) {
-  const id = await userId;
+  console.log(typeof userId);
   try {
     const user = await User.findOne({ username });
     if (!user) {
@@ -118,7 +118,7 @@ async function getUserProfile(username, userId) {
       throw new Error(error);
     }
 
-    console.log(user._id.toString(), userId.toString());
+    console.log(user._id.toString(), userId);
 
     if (user._id.toString() !== userId) {
       return {
