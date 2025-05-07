@@ -38,7 +38,11 @@ const maildev = new MailDev({
 // Function to connect to the database
 const connectToDatabase = async (dbUrl) => {
   try {
-    await mongoose.connect(dbUrl);
+    await mongoose.connect(dbUrl, {
+      useNewUrlParser: true, // These options are recommended
+      useUnifiedTopology: true,
+      // Remove useCreateIndex and useFindAndModify as they are deprecated in recent Mongoose versions
+    });
     console.log(`Connected to MongoDB at ${dbUrl}`);
     connectedDb = dbUrl;
     return true; // Indicate successful connection
