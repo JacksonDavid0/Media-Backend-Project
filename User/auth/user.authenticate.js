@@ -10,25 +10,27 @@ async function authenticateUser(req, res, next) {
     const existingEmail = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(409).json({
-        message: "Registration Error",
-        detail: "Username already exists",
-      }); // 409 Conflict
+      const error = {
+        status: 409,
+        code: "CONFLICT",
+        message: "User already exists",
+      };
+      return handleError(req, res, error);
     }
 
     if (existingEmail) {
-      return res.status(409).json({
-        message: "Registration Error",
-        detail: "Email already exists",
-      }); // 409 Conflict
+      const error = {
+        status: 409,
+        code: "CONFLICT",
+        message: "Email already exists",
+      };
+      return handleError(req, res, error);
     }
 
     next(); // If no conflicts, proceed to the next middleware or route handler
   } catch (error) {
     console.error("Error checking user:", error);
-    return res
-      .status(500)
-      .json({ message: "Registration Error", detail: "Internal Server Error" }); // 500 Internal Server Error
+    return handleError(req, res, error);
   }
 }
 

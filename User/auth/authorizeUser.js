@@ -14,7 +14,6 @@ async function authUser(req, res, next) {
         status: 401,
         code: "AUTHENTICATION_FAILED",
         message: "Invalid email or password",
-        details: [],
       };
       handleError(req, res, error);
     }
@@ -25,7 +24,6 @@ async function authUser(req, res, next) {
         status: 401,
         code: "AUTHENTICATION_FAILED",
         message: "Invalid email or password",
-        details: [],
       };
       handleError(req, res, error);
     }
@@ -36,7 +34,6 @@ async function authUser(req, res, next) {
         code: "ACCOUNT_NOT_VERIFIED",
         message:
           "Your account is not verified. Please check your email to complete verification.",
-        details: [],
       };
       handleError(req, res, error);
     }

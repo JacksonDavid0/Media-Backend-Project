@@ -88,7 +88,7 @@ async function login(email) {
     const user = await User.findOne({ email });
     const token = await user.generateToken("7d");
     return {
-      Data: _.omit(user, ["_id", "password", "__v"]),
+      Data: _.omit(user.toObject(), ["_id", "password", "__v"]),
       Token: token,
       Message: "User logged in successfully.",
     };
@@ -104,45 +104,30 @@ async function getUserProfile(username, userId) {
     if (!user) {
       const error = {
         status: 404,
-        code: "USER_NOT_FOUND",
+        code: "NOT_FOUND",
         message: "User not found",
-        details: [],
       };
       throw new Error(error);
     }
 
-    console.log(user._id, userId);
+    console.log(user._id.toString(), userId);
 
-    // console.log(
-    //   _.omit(user, [
-    //     _id,
-    //     email,
-    //     "password,
-    //     "role",
-    //     "verified",
-    //     "createdAt",
-    //     "__v",
-    //   ])
-    // );
-
-    if (user._id.toString() != userId.toString()) {
-      // return {
-      //   Data: _.omit(user, [
-      //     "_id",
-      //     "email",
-      //     "password",
-      //     "role",
-      //     "verified",
-      //     "createdAt",
-      //     "__v",
-      //   ]),
-      //   Message: "User profile retrieved successfully.",
-      // };\
-
-      return { Data: user.email };
-    } else if (user._id.toString() == userId.toString()) {
+    if (user._id.toString() !== userId) {
       return {
-        Data: _.omit(user, [
+        Data: _.omit(user.toObject(), [
+          "_id",
+          "email",
+          "password",
+          "role",
+          "verified",
+          "createdAt",
+          "__v",
+        ]),
+        Message: "User profile retrieved successfully.",
+      };
+    } else if (user._id.toString() === userId.toString()) {
+      return {
+        Data: _.omit(user.toObject(), [
           "_id",
           "password",
           "role",

@@ -5,6 +5,7 @@ const {
   login,
   getUserProfile,
 } = require("../services/user.service");
+const dataValidator = require("../tasks/user.validate");
 
 async function registerUser(req, res) {
   const {
@@ -70,10 +71,14 @@ async function loginUser(req, res) {
 async function userProfile(req, res) {
   const { username } = req.params;
   const userId = req.authorizeUserId;
+
   try {
-    const user = await getUserProfile(username, userId);
-    res.status(200).send(user.Data);
-    console.log(user.Message);
+    const validate = await dataValidator({ username });
+    if (validate) {
+      const user = await getUserProfile(username, userId);
+      console.log(user.Message);
+      return res.status(200).send(user.Data);
+    }
   } catch (error) {
     handleError(req, res, error);
   }

@@ -9,7 +9,6 @@ async function authorizeUser(req, res, next) {
       status: 401,
       code: "Authorization_Error",
       message: "Unathorized access token",
-      details: [],
     };
     handleError(req, res, error);
   }
@@ -21,7 +20,6 @@ async function authorizeUser(req, res, next) {
       status: 401,
       code: "Authorization_Error",
       message: "Unathorized access token",
-      details: [],
     };
     handleError(req, res, error);
   }
