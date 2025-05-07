@@ -8,7 +8,7 @@ async function authorizeUser(req, res, next) {
     const error = {
       status: 401,
       code: "Authorization_Error",
-      message: "Unathorized access token",
+      message: "Authentication token is required. Please log in.",
     };
     handleError(req, res, error);
   }
@@ -19,7 +19,7 @@ async function authorizeUser(req, res, next) {
     const error = {
       status: 401,
       code: "Authorization_Error",
-      message: "Unathorized access token",
+      message: "Invalid or expired authentication token. Please log in again.",
     };
     handleError(req, res, error);
   }

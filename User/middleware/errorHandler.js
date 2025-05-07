@@ -1,5 +1,5 @@
 function handleError(req, res, error) {
-  console.error("Error in /api/users route:", error);
+  console.error(`Error in ${req.originalUrl} route:`, error);
 
   const status = error.status || 500;
 

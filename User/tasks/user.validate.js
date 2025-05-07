@@ -115,7 +115,7 @@ const userSchema = Joi.object({
     }),
 });
 
-const dataValidator = (data) => {
+const dataValidator = async (data) => {
   const { error } = userSchema.validate(data, {
     abortEarly: false,
     presence: "optional",
@@ -125,10 +125,12 @@ const dataValidator = (data) => {
     const err = {
       status: 400,
       code: "Bad_Request",
-      message: "Validation error",
-      details: error.details.map((detail) => detail.message),
+      message: "Invalid user data",
+      details: error.details.map((detail) => {
+        return { field: detail.path[0], message: detail.message };
+      }),
     };
-    throw new Error(err);
+    throw err;
   }
   return true;
 };

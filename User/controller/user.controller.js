@@ -71,9 +71,11 @@ async function loginUser(req, res) {
 async function userProfile(req, res) {
   const { username } = req.params;
   const userId = req.authorizeUserId;
-
+  const email = "email@example";
   try {
-    const validate = await dataValidator({ username });
+    const validate = await dataValidator({ username, email });
+    console.log(validate);
+
     if (validate) {
       const user = await getUserProfile(username, userId);
       console.log(user.Message);
