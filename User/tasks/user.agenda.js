@@ -1,8 +1,11 @@
 const { Agenda } = require("agenda");
 const User = require("../model/user.model");
+const connectedDb = require("../../server");
+
+console.log(connectedDb);
 
 const agenda = new Agenda({
-  db: { address: process.env.Mongo_ConnectionLink },
+  db: { address: connectedDb },
 });
 
 agenda.define("delete unverified user", async (job) => {

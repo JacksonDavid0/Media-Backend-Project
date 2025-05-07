@@ -10,7 +10,7 @@ const { startAgenda } = require("./User/tasks/user.agenda");
 require("dotenv").config();
 const remoteDbUrl = process.env.REMOTE_DB_URL;
 const localDbUrl = process.env.LOCAL_DB_URL;
-
+let connectedDb;
 const port = process.env.PORT;
 
 // Middleware for parsing JSON requests
@@ -44,6 +44,7 @@ const connectToDatabase = async (dbUrl) => {
       // Remove useCreateIndex and useFindAndModify as they are deprecated in recent Mongoose versions
     });
     console.log(`Connected to MongoDB at ${dbUrl}`);
+    connectedDb = dbUrl;
     return true; // Indicate successful connection
   } catch (err) {
     console.error(`Failed to connect to MongoDB at ${dbUrl}`);
@@ -55,10 +56,10 @@ const connectToDatabase = async (dbUrl) => {
 connectToDatabase(remoteDbUrl).then((connected) => {
   if (!connected) {
     console.log("Remote connection failed, attempting local connection...");
-    connectToDatabase(localDbUrl).then((localConnected) => {
+    return connectToDatabase(localDbUrl).then((localConnected) => {
       if (!localConnected) {
         console.error("Both remote and local connections failed. Exiting.");
-        process.exit(1); // Exit with an error code
+        return process.exit(1); // Exit with an error code
       }
     });
   }
@@ -102,3 +103,5 @@ process.on("SIGINT", async () => {
     process.exit(0);
   });
 });
+
+module.exports = connectedDb;
