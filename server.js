@@ -10,7 +10,7 @@ const { startAgenda } = require("./User/tasks/user.agenda");
 require("dotenv").config();
 const remoteDbUrl = process.env.REMOTE_DB_URL;
 const localDbUrl = process.env.LOCAL_DB_URL;
-let connectedDb;
+let connectedDb = "";
 const port = process.env.PORT;
 
 // Middleware for parsing JSON requests
@@ -38,11 +38,7 @@ const maildev = new MailDev({
 // Function to connect to the database
 const connectToDatabase = async (dbUrl) => {
   try {
-    await mongoose.connect(dbUrl, {
-      useNewUrlParser: true, // These options are recommended
-      useUnifiedTopology: true,
-      // Remove useCreateIndex and useFindAndModify as they are deprecated in recent Mongoose versions
-    });
+    await mongoose.connect(dbUrl);
     console.log(`Connected to MongoDB at ${dbUrl}`);
     connectedDb = dbUrl;
     return true; // Indicate successful connection
@@ -66,7 +62,11 @@ connectToDatabase(remoteDbUrl).then((connected) => {
 });
 
 // Start Agenda
-startAgenda();
+async function starter() {
+  if (connectedDb) {
+    await startAgenda(connectedDb);
+  }
+}
 
 // Routes
 
