@@ -4,6 +4,7 @@ const {
   verify,
   login,
   getUserProfile,
+  updateUserProfile,
 } = require("../services/user.service");
 const dataValidator = require("../tasks/user.validate");
 
@@ -93,6 +94,41 @@ async function userProfile(req, res) {
   }
 }
 
+async function updateProfile(req, res) {
+  const { username, firstname, lastname, gender, email, phone, dob, address } =
+    req.body;
+  const userId = req.authorizeUserId;
+
+  try {
+    await dataValidator({
+      username,
+      firstname,
+      lastname,
+      gender,
+      email,
+      phone,
+      dob,
+      address,
+    });
+
+    const user = await updateUserProfile(
+      userId,
+      username,
+      firstname,
+      lastname,
+      gender,
+      email,
+      phone,
+      dob,
+      address
+    );
+    res.status(200).send(user.Data);
+    console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
 async function logoutUser(req, res) {
   res.clearCookie("userToken", {
     httpOnly: true,
@@ -107,5 +143,6 @@ module.exports = {
   verifyUser,
   loginUser,
   userProfile,
+  updateProfile,
   logoutUser,
 };

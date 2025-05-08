@@ -6,6 +6,7 @@ const {
   expiredVerificationLink,
   activatedVerificationLink,
 } = require("../mail/sendmail");
+const { notFoundError } = require("../middleware/errorHandler");
 
 async function register(
   username,
@@ -18,8 +19,6 @@ async function register(
   address,
   password
 ) {
-  console.log(password);
-
   try {
     const user = new User({
       username: username,
@@ -98,19 +97,11 @@ async function login(email) {
 }
 
 async function getUserProfile(username, userId) {
-  console.log(userId);
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      const error = {
-        status: 404,
-        code: "NOT_FOUND",
-        message: "User not found",
-      };
-      throw new Error(error);
+      return notFoundError();
     }
-
-    console.log(user._id.toString(), userId);
 
     if (user._id.toString() !== userId) {
       return {
@@ -143,9 +134,60 @@ async function getUserProfile(username, userId) {
   }
 }
 
+async function updateUserProfile(
+  userId,
+  username,
+  firstname,
+  lastname,
+  gender,
+  email,
+  phone,
+  dob,
+  address
+) {
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          username,
+          firstname,
+          lastname,
+          gender,
+          email,
+          phone,
+          dob,
+          address,
+        },
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!user) {
+      return notFoundError();
+    }
+
+    return {
+      Data: _.omit(user.toObject(), [
+        "_id",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]),
+      Message: "User profile updated successfully.",
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   register,
   verify,
   login,
   getUserProfile,
+  updateUserProfile,
 };

@@ -19,10 +19,6 @@ async function startAgenda(connectedDb) {
   console.log("Agenda schedule started");
 }
 
-// const agenda = new Agenda({
-//   db: { address: connectedDb },
-// });
-
 async function scheduleUserDelete(userId) {
   await agenda.schedule("now + 24 hours", "delete unverified user", {
     userId: userId,

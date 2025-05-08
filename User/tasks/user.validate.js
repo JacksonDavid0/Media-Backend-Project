@@ -124,8 +124,8 @@ const dataValidator = async (data) => {
   if (error) {
     const err = {
       status: 400,
-      code: "Bad_Request",
-      message: "Invalid user data",
+      code: "INVALID_INPUT_DATA",
+      message: "One or more fields contain invalid data.",
       details: error.details.map((detail) => {
         return { field: detail.path[0], message: detail.message };
       }),

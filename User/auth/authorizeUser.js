@@ -12,8 +12,15 @@ async function authUser(req, res, next) {
     if (!user) {
       const error = {
         status: 401,
-        code: "AUTHENTICATION_FAILED",
-        message: "Invalid email or password",
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid email or password.",
+        details: [
+          { field: "email", message: "Please check your email and try again." },
+          {
+            field: "password",
+            message: "Please check your password and try again.",
+          },
+        ],
       };
       handleError(req, res, error);
     }
@@ -22,8 +29,15 @@ async function authUser(req, res, next) {
     if (!match) {
       const error = {
         status: 401,
-        code: "AUTHENTICATION_FAILED",
-        message: "Invalid email or password",
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid email or password.",
+        details: [
+          { field: "email", message: "Please check your email and try again." },
+          {
+            field: "password",
+            message: "Please check your password and try again.",
+          },
+        ],
       };
       handleError(req, res, error);
     }
@@ -32,12 +46,13 @@ async function authUser(req, res, next) {
       const error = {
         status: 403,
         code: "ACCOUNT_NOT_VERIFIED",
-        message:
-          "Your account is not verified. Please check your email to complete verification.",
+        message: "Your account has not been verified.",
+        details: [
+          { message: "Please check your email for a verification link." },
+        ],
       };
       handleError(req, res, error);
     }
-    console.log("user verified");
     next();
   } catch (error) {
     console.error("Error verifying user:", error);
