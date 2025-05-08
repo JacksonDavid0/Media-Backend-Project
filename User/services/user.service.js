@@ -86,6 +86,10 @@ async function login(email) {
   try {
     const user = await User.findOne({ email });
     const token = await user.generateToken("7d");
+    if (!user) {
+      return notFoundError();
+    }
+
     return {
       Data: _.omit(user.toObject(), ["_id", "password", "__v"]),
       Token: token,
