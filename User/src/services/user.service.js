@@ -191,12 +191,12 @@ async function uploadProfilePicture(userId, filename, fileUrl) {
         picture: {
           filename: filename,
           fileUrl: fileUrl,
+          uploadAt: Date.now(),
         },
       },
       runValidators: true,
       new: true,
     });
-    console.log(user.picture);
 
     return {
       Data: user.picture,

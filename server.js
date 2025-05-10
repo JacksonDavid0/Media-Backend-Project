@@ -1,5 +1,6 @@
 const cors = require("cors");
 const express = require("express");
+const path = require("path");
 const app = express();
 const MailDev = require("maildev");
 const mongoose = require("mongoose");
@@ -10,8 +11,8 @@ const userRouter = require("./User/src/routes/user.routes");
 require("dotenv").config();
 const remoteDbUrl = process.env.REMOTE_DB_URL;
 const localDbUrl = process.env.LOCAL_DB_URL;
-let connectedDb = "";
 const port = process.env.PORT;
+let connectedDb;
 
 // Middleware for parsing JSON requests
 app.use(express.json());
@@ -61,9 +62,14 @@ connectToDatabase(remoteDbUrl).then((connected) => {
         console.error("Both remote and local connections failed. Exiting.");
         return process.exit(1); // Exit with an error code
       }
+      starter();
     });
   }
+  starter();
 });
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, "./User/public")));
 
 // Start Agenda
 async function starter() {
@@ -107,5 +113,3 @@ process.on("SIGINT", async () => {
     process.exit(0);
   });
 });
-
-module.exports = connectedDb;

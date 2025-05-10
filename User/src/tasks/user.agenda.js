@@ -20,12 +20,9 @@ async function startAgenda(connectedDb) {
 }
 
 async function scheduleUserDelete(userId) {
-  await agenda;
-  if (agenda) {
-    await agenda.schedule("now + 24 hours", "delete unverified user", {
-      userId: userId,
-    });
-  }
+  await agenda.schedule("now + 24 hours", "delete unverified user", {
+    userId: userId,
+  });
   console.log("User: " + userId + " scheduled for deletion in 24 hours");
 }
 

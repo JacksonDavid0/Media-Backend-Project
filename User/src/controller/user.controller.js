@@ -46,7 +46,7 @@ async function registerUser(req, res) {
       password
     );
     res.status(201).json(user);
-    console.log(user.Data);
+    // console.log(user.Data);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -57,7 +57,7 @@ async function verifyUser(req, res) {
   try {
     const user = await verify(token, userId);
     res.status(200).send(user.Data);
-    console.log(user.Message);
+    // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -76,7 +76,7 @@ async function loginUser(req, res) {
     });
 
     res.status(200).send(user.Data);
-    console.log(user.Message);
+    // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -88,7 +88,7 @@ async function userProfile(req, res) {
   try {
     await dataValidator({ username });
     const user = await getUserProfile(username, userId);
-    console.log(user.Message);
+    // console.log(user.Message);
     return res.status(200).send(user.Data);
   } catch (error) {
     handleError(req, res, error);
@@ -140,7 +140,7 @@ async function updateProfile(req, res) {
       address
     );
     res.status(200).send(user.Data);
-    console.log(user.Message);
+    // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -156,7 +156,7 @@ async function uploadPicture(req, res) {
       `/uploads/${req.file.filename}`
     );
     res.status(200).send(user.Data);
-    console.log(user.Message);
+    // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
   }
