@@ -110,7 +110,6 @@ const userSchema = new mongoose.Schema({
       },
       uploadAt: {
         type: Date,
-        default: Date.now,
       },
     },
     default: {},
