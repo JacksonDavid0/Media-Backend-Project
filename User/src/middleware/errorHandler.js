@@ -25,7 +25,7 @@ function notFoundError() {
     code: "USER_NOT_FOUND",
     message: "The requested user could not be found.",
   };
-  throw new Error(error);
+  throw error;
 }
 
 module.exports = { handleError, notFoundError };

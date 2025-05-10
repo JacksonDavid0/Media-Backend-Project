@@ -104,7 +104,7 @@ async function getUserProfile(username, userId) {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return notFoundError();
+      notFoundError();
     }
 
     if (user._id.toString() !== userId) {
@@ -163,13 +163,13 @@ async function updateUserProfile(
           dob,
           address,
         },
-        new: true,
         runValidators: true,
+        new: true,
       }
     );
 
     if (!user) {
-      return notFoundError();
+      notFoundError();
     }
 
     return {
@@ -188,10 +188,36 @@ async function updateUserProfile(
   }
 }
 
+async function uploadProfilePicture(userId, filename, fileUrl) {
+  try {
+    const user = await User.findByIdAndUpdate(userId, {
+      $set: {
+        picture: {
+          filename: filename,
+          fileUrl: fileUrl,
+        },
+      },
+      runValidators: true,
+      new: true,
+    });
+
+    if (!user) {
+      notFoundError();
+    }
+    return {
+      Data: user.picture,
+      Message: "Profile picture uploaded successfully.",
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   register,
   verify,
   login,
   getUserProfile,
   updateUserProfile,
+  uploadProfilePicture,
 };

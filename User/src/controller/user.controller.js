@@ -5,6 +5,7 @@ const {
   login,
   getUserProfile,
   updateUserProfile,
+  uploadProfilePicture,
 } = require("../services/user.service");
 const dataValidator = require("../tasks/user.validate");
 
@@ -95,6 +96,22 @@ async function userProfile(req, res) {
 }
 
 async function updateProfile(req, res) {
+  if (!req.body) {
+    const error = {
+      status: 400,
+      code: "MISSING_REQUEST_BODY",
+      message:
+        "The request body is required but was not provided or is undefined.",
+      details: [
+        {
+          field: null,
+          message: "Expected a request body, but 'req.body' is undefined.",
+        },
+      ],
+    };
+
+    return res.status(400).json(error);
+  }
   const { username, firstname, lastname, gender, email, phone, dob, address } =
     req.body;
   const userId = req.authorizeUserId;
@@ -129,6 +146,22 @@ async function updateProfile(req, res) {
   }
 }
 
+async function uploadPicture(req, res) {
+  try {
+    await dataValidator({ picture: req.file.filename });
+    const userId = req.authorizeUserId;
+    const user = await uploadProfilePicture(
+      userId,
+      req.file.filename,
+      `/uploads/${req.file.filename}`
+    );
+    res.status(200).send(user.Data);
+    console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
 async function logoutUser(req, res) {
   res.clearCookie("userToken", {
     httpOnly: true,
@@ -144,5 +177,6 @@ module.exports = {
   loginUser,
   userProfile,
   updateProfile,
+  uploadPicture,
   logoutUser,
 };

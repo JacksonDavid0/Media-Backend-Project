@@ -96,7 +96,10 @@ const userSchema = new mongoose.Schema({
   },
 
   picture: {
-    type: String,
+    type: {
+      filename: String,
+      fileUrl: String,
+    },
     trim: true,
     default: "",
     validate: {
