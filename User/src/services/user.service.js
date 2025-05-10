@@ -6,7 +6,6 @@ const {
   expiredVerificationLink,
   activatedVerificationLink,
 } = require("../mail/sendmail");
-const { notFoundError } = require("../middleware/errorHandler");
 
 async function register(
   username,
@@ -86,9 +85,6 @@ async function login(email) {
   try {
     const user = await User.findOne({ email });
     const token = await user.generateToken("7d");
-    if (!user) {
-      return notFoundError();
-    }
 
     return {
       Data: _.omit(user.toObject(), ["_id", "password", "__v"]),
@@ -103,9 +99,6 @@ async function login(email) {
 async function getUserProfile(username, userId) {
   try {
     const user = await User.findOne({ username });
-    if (!user) {
-      notFoundError();
-    }
 
     if (user._id.toString() !== userId) {
       return {
@@ -168,10 +161,6 @@ async function updateUserProfile(
       }
     );
 
-    if (!user) {
-      notFoundError();
-    }
-
     return {
       Data: _.omit(user.toObject(), [
         "_id",
@@ -200,10 +189,8 @@ async function uploadProfilePicture(userId, filename, fileUrl) {
       runValidators: true,
       new: true,
     });
+    console.log(user.picture);
 
-    if (!user) {
-      notFoundError();
-    }
     return {
       Data: user.picture,
       Message: "Profile picture uploaded successfully.",

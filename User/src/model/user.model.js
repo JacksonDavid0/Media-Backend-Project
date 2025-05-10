@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const validator = require("validator");
+const { boolean } = require("joi");
 require("dotenv").config();
 const secret = process.env.JWT_Secret;
 
@@ -97,16 +98,22 @@ const userSchema = new mongoose.Schema({
 
   picture: {
     type: {
+      _id: Boolean,
       filename: String,
-      fileUrl: String,
+      fileUrl: {
+        type: String,
+        validate: {
+          validator: (value) =>
+            !value || validator.isURL(value, { require_protocol: true }),
+          message: "Invalid picture URL",
+        },
+      },
+      uploadAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
-    trim: true,
-    default: "",
-    validate: {
-      validator: (value) =>
-        !value || validator.isURL(value, { require_protocol: true }),
-      message: "Invalid picture URL",
-    },
+    default: {},
   },
 
   role: {
@@ -129,7 +136,7 @@ const userSchema = new mongoose.Schema({
 
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
 });
 
@@ -147,6 +154,18 @@ userSchema.statics.verifyToken = async function (token) {
   } catch (err) {
     console.log(err);
     throw new Error("Invalid Token");
+  }
+};
+
+userSchema.statics.verifyUser = async function (userId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return false;
+    }
+    return true;
+  } catch (err) {
+    return false;
   }
 };
 

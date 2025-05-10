@@ -19,7 +19,7 @@ userRouter.get("/verifyUser/signature=:userId&:token", verifyUser);
 userRouter.post("/login", authUser, loginUser);
 userRouter.get("/profile/:username", authorizeUser, userProfile);
 userRouter.put("/profile/update", authorizeUser, updateProfile);
-userRouter.post("profile/upload", authorizeUser, upload, uploadPicture);
+userRouter.post("/profile/upload", authorizeUser, upload, uploadPicture);
 userRouter.get("/logout", logoutUser);
 
 module.exports = userRouter;

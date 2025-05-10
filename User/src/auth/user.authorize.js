@@ -25,6 +25,16 @@ async function authorizeUser(req, res, next) {
     };
     handleError(req, res, error);
   }
+
+  const user = await User.verifyUser(userId);
+  if (!user) {
+    const error = {
+      status: 404,
+      code: "USER_NOT_FOUND",
+      message: "The requested user could not be found.",
+    };
+    handleError(req, res, error);
+  }
   req.authorizeUserId = userId;
   next();
 }

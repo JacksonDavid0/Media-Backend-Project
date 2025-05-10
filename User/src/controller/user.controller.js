@@ -148,7 +148,7 @@ async function updateProfile(req, res) {
 
 async function uploadPicture(req, res) {
   try {
-    await dataValidator({ picture: req.file.filename });
+    await dataValidator({ picture: req.file.image });
     const userId = req.authorizeUserId;
     const user = await uploadProfilePicture(
       userId,

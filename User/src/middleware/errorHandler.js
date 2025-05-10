@@ -19,13 +19,4 @@ function handleError(req, res, error) {
   }
 }
 
-function notFoundError() {
-  const error = {
-    status: 404,
-    code: "USER_NOT_FOUND",
-    message: "The requested user could not be found.",
-  };
-  throw error;
-}
-
-module.exports = { handleError, notFoundError };
+module.exports = { handleError };
