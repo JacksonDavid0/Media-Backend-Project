@@ -87,7 +87,14 @@ async function login(email) {
     const token = await user.generateToken("7d");
 
     return {
-      Data: _.omit(user.toObject(), ["_id", "password", "__v"]),
+      Data: _.omit(user.toObject(), [
+        "_id",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]),
       Token: token,
       Message: "User logged in successfully.",
     };
