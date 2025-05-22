@@ -1,13 +1,12 @@
 require("dotenv").config();
-
-const forgetPasswordLink = (username, userId, token) => {
-  const link = process.env.REMOTE_Link;
+const expiredPasswordLink = (username) => {
+  const link = process.env.Web_Link;
   return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reset Your Sphere Mesh Password</title>
+    <title>Password Reset Link Expired - Sphere Mesh</title>
     <style>
       * {
         margin: 0;
@@ -27,8 +26,8 @@ const forgetPasswordLink = (username, userId, token) => {
         padding: 20px 0;
       }
       .container {
-        width: 95%; /* Makes the container fluid, taking 95% of available width */
-        max-width: 600px; /* Prevents the container from becoming too wide on large screens */
+        width: 95%;
+        max-width: 600px;
         font-weight: 600;
         font-size: 14px;
         margin: 0 auto;
@@ -43,7 +42,7 @@ const forgetPasswordLink = (username, userId, token) => {
         margin-bottom: 20px;
       }
       .header h1 {
-        color: #333;
+        color: #d9534f; /* Changed color to indicate an issue */
         font-size: 24px;
       }
       .content {
@@ -57,7 +56,7 @@ const forgetPasswordLink = (username, userId, token) => {
         display: inline-block;
         background-color: #007bff; /* Example button color */
         color: white;
-        padding: 12px 25px; /* Slightly larger padding for button */
+        padding: 12px 25px;
         text-decoration: none;
         border-radius: 5px;
         font-weight: bold;
@@ -66,23 +65,16 @@ const forgetPasswordLink = (username, userId, token) => {
        .button:hover {
            background-color: #0056b3;
        }
-      ul {
-        padding-left: 30px;
-        margin-bottom: 15px;
-      }
-      ul li {
-          margin-bottom: 8px;
-      }
       .footer {
         text-align: center;
         margin-top: 20px;
         font-size: 0.9em;
         color: #777;
-        padding-top: 15px; /* Add padding above footer content */
-        border-top: 1px solid #eee; /* Add a separator line */
+        padding-top: 15px;
+        border-top: 1px solid #eee;
       }
        .footer p {
-           margin-bottom: 5px; /* Less margin for footer paragraphs */
+           margin-bottom: 5px;
        }
       .footer a {
           color: #777;
@@ -91,27 +83,26 @@ const forgetPasswordLink = (username, userId, token) => {
        .footer a:hover {
            text-decoration: underline;
        }
-      .expiry-note {
+      .expiry-note { /* Re-purposed for general alert */
         margin-top: 15px;
-        margin-bottom: 15px; /* Add bottom margin as well */
+        margin-bottom: 15px;
         font-size: 0.9em;
-        color: #d9534f;
+        color: #d9534f; /* Red color for alert */
         font-weight: normal;
       }
 
-      /* Media query for smaller screens */
       @media (max-width: 400px) {
         .container {
-              padding: 20px 15px; /* Reduce padding further on very small screens */
+              padding: 20px 15px;
           }
           .header h1 {
-              font-size: 20px; /* Reduce header size on very small screens */
+              font-size: 20px;
           }
-          .content p, ul {
-              font-size: 13px; /* Slightly smaller text on very small screens */
+          .content p {
+              font-size: 13px;
           }
           .button {
-              padding: 10px 20px; /* Adjust button padding */
+              padding: 10px 20px;
               font-size: 14px;
           }
       }
@@ -121,35 +112,31 @@ const forgetPasswordLink = (username, userId, token) => {
     <div class="container-holder">
       <div class="container">
         <div class="header">
-          <h1>Reset Your Sphere Mesh Password</h1>
+          <h1>Password Reset Link Expired</h1>
         </div>
         <div class="content">
           <p>Hi ${username},</p>
-          <p>
-            We received a request to reset the password for your Sphere Mesh
-            account.
+          <p class="expiry-note">
+            The password reset link you used has expired or is no longer valid.
+            For security reasons, password reset links are only active for a
+            limited time (typically 15 minutes).
           </p>
 
           <p>
-            To reset your password, please click the button below. This will
-            take you to a secure page where you can create a new password.
+            Don't worry! You can easily request a new password reset link.
+            Please visit our "Forgot Password" page and enter your email
+            address to receive a new link.
           </p>
 
           <p style="text-align: center; margin: 30px 0; color: white">
-            <a href="http://${link}/corfirmPasswordToken/signature=${userId}&${token}" class="button"
-              >Reset Your Password</a
+            <a href="http://${link}/forget-Password" class="button"
+              >Request New Password Reset Link</a
             >
           </p>
 
-          <p class="expiry-note">
-            Please note: This password reset link will expire in 48 hours for
-            security reasons. If you do not reset your password within this
-            time, you will need to submit another request.
-          </p>
-
           <p>
-            If you did not request a password reset, please ignore this email.
-            Your password will remain unchanged.
+            If you continue to experience issues, please contact our support
+            team.
           </p>
         </div>
 
@@ -165,4 +152,4 @@ const forgetPasswordLink = (username, userId, token) => {
 </html>`;
 };
 
-module.exports = forgetPasswordLink;
+module.exports = expiredPasswordLink;

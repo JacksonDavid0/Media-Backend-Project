@@ -3,6 +3,11 @@ const activateEmail = require("../template/activateEmailTemplate");
 const expiredVerification = require("../template/expiredVerificationTemplate");
 const verifiedEmail = require("../template/verifiedEmailTemplate");
 const forgetPasswordLink = require("../template/forgetPasswordTemplate");
+const expiredPassword = require("../template/expiredPasswordTemplate");
+const UserNotFound = require("../template/userNotFoundTemplate");
+const expiredPasswordLink = require("../template/expiredPasswordTemplate");
+const resetPasswordLink = require("../template/resetPasswordTemplate");
+const successPasswordLink = require("../template/successPasswordTemplate");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
@@ -53,11 +58,11 @@ async function expiredVerificationLink() {
   }
 }
 
-async function sendForgotPasswordLink(username, email, token) {
+async function sendForgotPasswordLink(username, email, userId, token) {
   try {
     const subject = "Forget Password";
 
-    const html = forgetPasswordLink(username, token);
+    const html = forgetPasswordLink(username, userId, token);
     const info = await transporter.sendMail({
       from: process.env.Email, // sender address
       to: email, // list of receivers
@@ -70,9 +75,49 @@ async function sendForgotPasswordLink(username, email, token) {
   }
 }
 
+async function resetForgettenPasswordLink(username) {
+  try {
+    const html = resetPasswordLink(username);
+    return html;
+  } catch (error) {
+    throw error.message;
+  }
+}
+
+async function expiredForgottenPasswordLink(username) {
+  try {
+    const html = expiredPasswordLink(username);
+    return html;
+  } catch (error) {
+    throw error.message;
+  }
+}
+
+async function successForgettenPasswordLink(username) {
+  try {
+    const html = successPasswordLink(username);
+    return html;
+  } catch (error) {
+    throw error.message;
+  }
+}
+
+async function notFound() {
+  try {
+    const html = UserNotFound;
+    return html;
+  } catch (error) {
+    throw error.message;
+  }
+}
+
 module.exports = {
+  notFound,
   sendActivationLink,
   activatedVerificationLink,
   expiredVerificationLink,
   sendForgotPasswordLink,
+  resetForgettenPasswordLink,
+  expiredForgottenPasswordLink,
+  successForgettenPasswordLink,
 };

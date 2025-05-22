@@ -9,6 +9,8 @@ const {
   updateProfile,
   uploadPicture,
   forgettenPassword,
+  resetForgettenPassword,
+  confirmForgettenPasswordToken,
 } = require("../controller/user.controller");
 const { authenticateUser } = require("../auth/user.authenticate");
 const { authUser } = require("../auth/authorizeUser");
@@ -22,8 +24,11 @@ userRouter.get("/profile/:username", authorizeUser, userProfile);
 userRouter.put("/profile/update", authorizeUser, updateProfile);
 userRouter.post("/profile/upload", authorizeUser, upload, uploadPicture);
 userRouter.post("forget-Password", forgettenPassword);
-userRouter.get("corfirmPasswordToken/:token", confirmPasswordToken);
-userRouter.post("/resetPassword", resetPassword);
+userRouter.get(
+  "corfirmPasswordToken/signature=:userId&:token",
+  confirmForgettenPasswordToken
+);
+userRouter.post("/resetPassword", resetForgettenPassword);
 userRouter.get("/logout", logoutUser);
 
 module.exports = userRouter;

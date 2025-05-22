@@ -77,8 +77,8 @@ async function starter() {
 
 // Routes
 
-app.use("/user", userRouter);
-app.use("/post", postRouter);
+app.use("api/v1/user", userRouter);
+app.use("api/v1/post", postRouter);
 
 // Start the server
 app.listen(port, () => {

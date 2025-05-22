@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const verifiedEmail = (username) => {
-  const link = process.env.REMOTE_Link;
+  const link = process.env.Web_Link;
   return `
     <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +36,7 @@ const verifiedEmail = (username) => {
             Start connecting with people from around the globe and share your experiences.
         </p>
 
-        <a href="http://${link}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+        <a href="http://${link}/login" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out">
             Go to Sphere Mesh
         </a>
     </div>

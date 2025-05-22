@@ -7,6 +7,7 @@ const {
   updateUserProfile,
   uploadProfilePicture,
   forgetPassword,
+  confirmPasswordToken,
 } = require("../services/user.service");
 const dataValidator = require("../tasks/user.validate");
 
@@ -54,9 +55,9 @@ async function registerUser(req, res) {
 }
 
 async function verifyUser(req, res) {
-  const { token, userId } = req.params;
+  const { userId, token } = req.params;
   try {
-    const user = await verify(token, userId);
+    const user = await verify(userId, token);
     res.status(200).send(user.Data);
     // console.log(user.Message);
   } catch (error) {
@@ -175,12 +176,22 @@ async function forgettenPassword(req, res) {
   }
 }
 
-async function confirmPasswordToken(req, res) {
-  const { token } = req.params;
+async function confirmForgettenPasswordToken(req, res) {
+  const { userId, token } = req.params;
   try {
-    const user = await confirmPasswordToken(token);
-    res.status(200).send(user.Data);
-    // console.log(user.Message);
+    const user = await confirmPasswordToken(userId, token);
+    res.status(200).send(user);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
+async function resetForgettenPassword(req, res) {
+  const { userId, token } = params;
+  const { password } = req.body;
+  try {
+    const user = await resetPassword(userId, token, password);
+    res.status(200).send(user);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -203,5 +214,7 @@ module.exports = {
   updateProfile,
   uploadPicture,
   forgettenPassword,
+  confirmForgettenPasswordToken,
+  resetForgettenPassword
   logoutUser,
 };

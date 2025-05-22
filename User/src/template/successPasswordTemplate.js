@@ -1,13 +1,12 @@
 require("dotenv").config();
-
-const forgetPasswordLink = (username, userId, token) => {
-  const link = process.env.REMOTE_Link;
+const successPasswordLink = (username) => {
+  const link = process.env.Web_Link;
   return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reset Your Sphere Mesh Password</title>
+    <title>Password Successfully Reset - Sphere Mesh</title>
     <style>
       * {
         margin: 0;
@@ -43,7 +42,7 @@ const forgetPasswordLink = (username, userId, token) => {
         margin-bottom: 20px;
       }
       .header h1 {
-        color: #333;
+        color: #28a745; /* Green color for success */
         font-size: 24px;
       }
       .content {
@@ -91,13 +90,7 @@ const forgetPasswordLink = (username, userId, token) => {
        .footer a:hover {
            text-decoration: underline;
        }
-      .expiry-note {
-        margin-top: 15px;
-        margin-bottom: 15px; /* Add bottom margin as well */
-        font-size: 0.9em;
-        color: #d9534f;
-        font-weight: normal;
-      }
+      /* Removed .expiry-note as it's not relevant for success */
 
       /* Media query for smaller screens */
       @media (max-width: 400px) {
@@ -121,35 +114,24 @@ const forgetPasswordLink = (username, userId, token) => {
     <div class="container-holder">
       <div class="container">
         <div class="header">
-          <h1>Reset Your Sphere Mesh Password</h1>
+          <h1>Password Successfully Reset!</h1>
         </div>
         <div class="content">
           <p>Hi ${username},</p>
           <p>
-            We received a request to reset the password for your Sphere Mesh
-            account.
-          </p>
-
-          <p>
-            To reset your password, please click the button below. This will
-            take you to a secure page where you can create a new password.
+            Your password for Sphere Mesh has been successfully reset.
+            You can now log in with your new password.
           </p>
 
           <p style="text-align: center; margin: 30px 0; color: white">
-            <a href="http://${link}/corfirmPasswordToken/signature=${userId}&${token}" class="button"
-              >Reset Your Password</a
+            <a href="http://${link}/login" class="button"
+              >Log In Now</a
             >
           </p>
 
-          <p class="expiry-note">
-            Please note: This password reset link will expire in 48 hours for
-            security reasons. If you do not reset your password within this
-            time, you will need to submit another request.
-          </p>
-
           <p>
-            If you did not request a password reset, please ignore this email.
-            Your password will remain unchanged.
+            If you did not initiate this password change, please contact our
+            support team immediately.
           </p>
         </div>
 
@@ -165,4 +147,4 @@ const forgetPasswordLink = (username, userId, token) => {
 </html>`;
 };
 
-module.exports = forgetPasswordLink;
+module.exports = successPasswordLink;

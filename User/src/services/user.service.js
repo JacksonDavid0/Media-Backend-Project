@@ -6,7 +6,12 @@ const {
   expiredVerificationLink,
   activatedVerificationLink,
   sendForgotPasswordLink,
+  resetForgettenPasswordLink,
+  expiredForgottenPasswordLink,
+  notFound,
+  successForgettenPasswordLink,
 } = require("../mail/sendmail");
+const successPasswordLink = require("../template/successPasswordTemplate");
 
 async function register(
   username,
@@ -45,7 +50,7 @@ async function register(
   }
 }
 
-async function verify(token, userId) {
+async function verify(userId, token) {
   try {
     const user = await User.findOne({ _id: userId });
     if (!user) {
@@ -212,12 +217,54 @@ async function forgetPassword(email) {
   try {
     const user = await User.findOne({ email });
     const token = await user.generateToken("15m");
-    await sendForgotPasswordLink(user.username, user.email, token);
+    await sendForgotPasswordLink(user.username, user.email, user._id, token);
 
     return {
       Data: `If an account with this email ${email} exists, we've sent a password reset link.`,
       Message: "Forgotten password link sent successfully.",
     };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+async function confirmPasswordToken(userId, token) {
+  try {
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return notFound();
+    }
+    const userToken = await User.verifyToken(token);
+    if (!userToken) {
+      return expiredForgottenPasswordLink(user.username);
+    } else {
+      return resetForgettenPasswordLink(user.username);
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+async function resetPassword(userId, token, password) {
+  try {
+    const userToken = User.verifyToken(token);
+    if (!userToken) {
+      return expiredForgottenPasswordLink();
+    }
+
+    const user = await User.findByIdAndUpdate(userId, {
+      $set: {
+        password: password,
+      },
+      runValidators: true,
+      new: true,
+    });
+
+    if (!user) {
+      return notFound();
+    }
+
+    return successForgettenPasswordLink(user.username);
   } catch (error) {
     throw new Error(error);
   }
@@ -231,4 +278,6 @@ module.exports = {
   updateUserProfile,
   uploadProfilePicture,
   forgetPassword,
+  confirmPasswordToken,
+  resetPassword,
 };
