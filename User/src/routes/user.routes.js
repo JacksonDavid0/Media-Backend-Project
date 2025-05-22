@@ -23,9 +23,9 @@ userRouter.post("/login", authUser, loginUser);
 userRouter.get("/profile/:username", authorizeUser, userProfile);
 userRouter.put("/profile/update", authorizeUser, updateProfile);
 userRouter.post("/profile/upload", authorizeUser, upload, uploadPicture);
-userRouter.post("forget-Password", forgettenPassword);
+userRouter.post("/forget-Password", forgettenPassword);
 userRouter.get(
-  "corfirmPasswordToken/signature=:userId&:token",
+  "/corfirmPasswordToken/signature=:userId&:token",
   confirmForgettenPasswordToken
 );
 userRouter.post("/resetPassword", resetForgettenPassword);
