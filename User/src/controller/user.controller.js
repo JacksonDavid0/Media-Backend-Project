@@ -215,6 +215,6 @@ module.exports = {
   uploadPicture,
   forgettenPassword,
   confirmForgettenPasswordToken,
-  resetForgettenPassword
+  resetForgettenPassword,
   logoutUser,
 };
