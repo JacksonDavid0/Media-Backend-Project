@@ -5,6 +5,7 @@ const {
   sendActivationLink,
   expiredVerificationLink,
   activatedVerificationLink,
+  sendForgotPasswordLink,
 } = require("../mail/sendmail");
 
 async function register(
@@ -207,6 +208,21 @@ async function uploadProfilePicture(userId, filename, fileUrl) {
   }
 }
 
+async function forgetPassword(email) {
+  try {
+    const user = await User.findOne({ email });
+    const token = await user.generateToken("15m");
+    await sendForgotPasswordLink(user.username, user.email, token);
+
+    return {
+      Data: `If an account with this email ${email} exists, we've sent a password reset link.`,
+      Message: "Forgotten password link sent successfully.",
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   register,
   verify,
@@ -214,4 +230,5 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   uploadProfilePicture,
+  forgetPassword,
 };

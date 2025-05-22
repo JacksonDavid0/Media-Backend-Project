@@ -1,14 +1,13 @@
 require("dotenv").config();
 
-const activateEmail = (username, userId, token) => {
+const forgetPasswordLink = (username, token) => {
   const link = process.env.REMOTE_Link;
-
   return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Sphere Mesh</title>
+    <title>Reset Your Sphere Mesh Password</title>
     <style>
       * {
         margin: 0;
@@ -28,11 +27,16 @@ const activateEmail = (username, userId, token) => {
         padding: 20px 0;
       }
       .container {
-        width: 95%;
-        max-width: 600px;
+        width: 95%; /* Makes the container fluid, taking 95% of available width */
+        max-width: 600px; /* Prevents the container from becoming too wide on large screens */
         font-weight: 600;
         font-size: 14px;
         margin: 0 auto;
+        padding: 30px 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
       .header {
         text-align: center;
@@ -46,9 +50,9 @@ const activateEmail = (username, userId, token) => {
         margin-bottom: 20px;
       }
       .content p {
-      color: black;
-          margin-bottom: 15px;
-        }
+        color: black;
+        margin-bottom: 15px;
+      }
       .button {
         display: inline-block;
         background-color: #007bff; /* Example button color */
@@ -70,7 +74,7 @@ const activateEmail = (username, userId, token) => {
           margin-bottom: 8px;
       }
       .footer {
-        text-align: center; 
+        text-align: center;
         margin-top: 20px;
         font-size: 0.9em;
         color: #777;
@@ -90,16 +94,16 @@ const activateEmail = (username, userId, token) => {
       .expiry-note {
         margin-top: 15px;
         margin-bottom: 15px; /* Add bottom margin as well */
-        font-size: 0.9em; 
+        font-size: 0.9em;
         color: #d9534f;
         font-weight: normal;
       }
 
-
+      /* Media query for smaller screens */
       @media (max-width: 400px) {
         .container {
-             padding: 20px 15px; /* Reduce padding further on very small screens */
-         }
+              padding: 20px 15px; /* Reduce padding further on very small screens */
+          }
           .header h1 {
               font-size: 20px; /* Reduce header size on very small screens */
           }
@@ -111,61 +115,41 @@ const activateEmail = (username, userId, token) => {
               font-size: 14px;
           }
       }
-      .container {
-        padding: 30px 20px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
     </style>
   </head>
   <body>
     <div class="container-holder">
       <div class="container">
         <div class="header">
-          <h1>Welcome to Sphere Mesh!</h1>
+          <h1>Reset Your Sphere Mesh Password</h1>
         </div>
         <div class="content">
           <p>Hi ${username},</p>
           <p>
-            Thank you for registering on Sphere Mesh! We're excited to have you
-            join our community.
+            We received a request to reset the password for your Sphere Mesh
+            account.
           </p>
 
           <p>
-            Before you can start connecting with friends, sharing updates, and
-            exploring content, we need you to verify your email address.
+            To reset your password, please click the button below. This will
+            take you to a secure page where you can create a new password.
           </p>
 
           <p style="text-align: center; margin: 30px 0; color: white">
-            <a href="http://${link}/verifyUser/signature=${userId}&${token}" class="button"
-              >Verify Email Address</a
+            <a href="http://${link}/forget-password/${token}" class="button"
+              >Reset Your Password</a
             >
           </p>
 
-          <p>
-            Sphere Mesh is a social platform designed to connect diverse
-            individuals from around the world and provide a space for sharing
-            ideas, experiences, and building community.
-          </p>
           <p class="expiry-note">
-            Please note: This verification link will expire in 48 hours for
-            security reasons.
+            Please note: This password reset link will expire in 48 hours for
+            security reasons. If you do not reset your password within this
+            time, you will need to submit another request.
           </p>
 
-          <p>Once verified, you can:</p>
-          <ul>
-            <li>Complete your profile</li>
-            <li>Find and connect with friends</li>
-            <li>Share your first post</li>
-            <li>Discover interesting communities and topics</li>
-          </ul>
-
           <p>
-            If you didn't create an account on Sphere Mesh, please ignore this
-            email.
+            If you did not request a password reset, please ignore this email.
+            Your password will remain unchanged.
           </p>
         </div>
 
@@ -173,13 +157,12 @@ const activateEmail = (username, userId, token) => {
           <p>Thank you,<br />The Sphere Mesh Team</p>
           <p>
             <a href="#" target="_blank">Visit Sphere Mesh</a>
-             </p>
-          </div>
+          </p>
+        </div>
       </div>
     </div>
   </body>
-</html>
-`;
+</html>`;
 };
 
-module.exports = activateEmail;
+module.exports = forgetPasswordLink;

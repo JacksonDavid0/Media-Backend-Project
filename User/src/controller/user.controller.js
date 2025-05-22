@@ -6,6 +6,7 @@ const {
   getUserProfile,
   updateUserProfile,
   uploadProfilePicture,
+  forgetPassword,
 } = require("../services/user.service");
 const dataValidator = require("../tasks/user.validate");
 
@@ -162,6 +163,29 @@ async function uploadPicture(req, res) {
   }
 }
 
+async function forgettenPassword(req, res) {
+  const { email } = req.body;
+  try {
+    await dataValidator({ email });
+    const user = await forgetPassword(email);
+    res.status(200).send(user.Data);
+    // console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
+async function confirmPasswordToken(req, res) {
+  const { token } = req.params;
+  try {
+    const user = await confirmPasswordToken(token);
+    res.status(200).send(user.Data);
+    // console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
 async function logoutUser(req, res) {
   res.clearCookie("userToken", {
     httpOnly: true,
@@ -178,5 +202,6 @@ module.exports = {
   userProfile,
   updateProfile,
   uploadPicture,
+  forgettenPassword,
   logoutUser,
 };

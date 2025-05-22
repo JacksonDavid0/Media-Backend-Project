@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const activateEmail = require("../template/activateEmailTemplate");
 const expiredVerification = require("../template/expiredVerificationTemplate");
 const verifiedEmail = require("../template/verifiedEmailTemplate");
+const forgetPasswordLink = require("../template/forgetPasswordTemplate");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
@@ -30,7 +31,7 @@ async function sendActivationLink(username, userId, email, token) {
       html: html, // html body
     });
   } catch (error) {
-    throw new Error(error.message);
+    throw error.message;
   }
 }
 
@@ -39,7 +40,7 @@ async function activatedVerificationLink(username) {
     const html = verifiedEmail(username);
     return html;
   } catch (error) {
-    throw new Error(error.message);
+    throw error.message;
   }
 }
 
@@ -48,7 +49,24 @@ async function expiredVerificationLink() {
     const html = expiredVerification();
     return html;
   } catch (error) {
-    throw new Error(error.message);
+    throw error.message;
+  }
+}
+
+async function sendForgotPasswordLink(username, email, token) {
+  try {
+    const subject = "Forget Password";
+
+    const html = forgetPasswordLink(username, token);
+    const info = await transporter.sendMail({
+      from: process.env.Email, // sender address
+      to: email, // list of receivers
+      subject: subject, // Subject line
+      //   text: text, // plain text body
+      html: html, // html body
+    });
+  } catch (error) {
+    throw error.message;
   }
 }
 
@@ -56,4 +74,5 @@ module.exports = {
   sendActivationLink,
   activatedVerificationLink,
   expiredVerificationLink,
+  sendForgotPasswordLink,
 };

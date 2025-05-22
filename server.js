@@ -68,9 +68,6 @@ connectToDatabase(remoteDbUrl).then((connected) => {
   starter();
 });
 
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, "./User/public")));
-
 // Start Agenda
 async function starter() {
   if (connectedDb) {
