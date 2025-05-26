@@ -109,6 +109,25 @@ async function login(email) {
   }
 }
 
+async function getProfile(userId) {
+  try {
+    const user = await User.findOne({ _id: userId });
+
+    return {
+      Data: _.pick(user.toObject(), [
+        "username",
+        "firstname",
+        "lastname",
+        "gender",
+        "email",
+      ]),
+      Message: "User profile retrieved successfully.",
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 async function getUserProfile(username, userId) {
   try {
     const user = await User.findOne({ username });
