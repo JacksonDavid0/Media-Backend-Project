@@ -84,6 +84,17 @@ async function loginUser(req, res) {
   }
 }
 
+async function profile(req, res) {
+  const userId = req.authorizeUserId;
+  try {
+    const user = await getProfile(userId);
+    res.status(200).send(user.Data);
+    // console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
 async function userProfile(req, res) {
   const { username } = req.params;
   const userId = req.authorizeUserId;

@@ -293,6 +293,7 @@ module.exports = {
   register,
   verify,
   login,
+  getProfile,
   getUserProfile,
   updateUserProfile,
   uploadProfilePicture,

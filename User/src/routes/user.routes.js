@@ -5,6 +5,7 @@ const {
   verifyUser,
   loginUser,
   logoutUser,
+  profile,
   userProfile,
   updateProfile,
   uploadPicture,
@@ -20,6 +21,7 @@ const upload = require("../middleware/upload");
 userRouter.post("/register", authenticateUser, registerUser);
 userRouter.get("/verifyUser/signature=:userId&:token", verifyUser);
 userRouter.post("/login", authUser, loginUser);
+userRouter.get("/profile", authorizeUser, profile);
 userRouter.get("/profile/:username", authorizeUser, userProfile);
 userRouter.put("/profile/update", authorizeUser, updateProfile);
 userRouter.post("/profile/upload", authorizeUser, upload, uploadPicture);
