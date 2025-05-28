@@ -8,6 +8,7 @@ const {
   uploadProfilePicture,
   forgetPassword,
   confirmPasswordToken,
+  getProfile,
 } = require("../services/user.service");
 const dataValidator = require("../tasks/user.validate");
 
@@ -221,6 +222,7 @@ module.exports = {
   registerUser,
   verifyUser,
   loginUser,
+  profile,
   userProfile,
   updateProfile,
   uploadPicture,
