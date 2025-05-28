@@ -132,7 +132,16 @@ async function getUserProfile(username, userId) {
   try {
     const user = await User.findOne({ username });
 
-    if (user._id.toString() !== userId) {
+    if (!user || user === null) {
+      const error = {
+        status: 404,
+        code: "USER_NOT_FOUND",
+        message: "The requested user could not be found.",
+      };
+      throw new Error(error);
+    }
+
+    if (user._id !== userId) {
       return {
         Data: _.omit(user.toObject(), [
           "_id",
@@ -145,7 +154,7 @@ async function getUserProfile(username, userId) {
         ]),
         Message: "User profile retrieved successfully.",
       };
-    } else if (user._id.toString() === userId.toString()) {
+    } else if (user._id === userId) {
       return {
         Data: _.omit(user.toObject(), [
           "_id",
