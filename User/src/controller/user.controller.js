@@ -105,6 +105,7 @@ async function userProfile(req, res) {
     // console.log(user.Message);
     return res.status(200).send(user.Data);
   } catch (error) {
+    console.log(error);
     handleError(req, res, error);
   }
 }

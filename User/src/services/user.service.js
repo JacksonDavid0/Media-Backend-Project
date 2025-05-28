@@ -46,7 +46,11 @@ async function register(
         "We've sent a verification link to your email. Please activate/verify your account.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -83,7 +87,11 @@ async function verify(userId, token) {
       Message: "User verified successfully.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -105,7 +113,11 @@ async function login(email) {
       Message: "User logged in successfully.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -124,51 +136,61 @@ async function getProfile(userId) {
       Message: "User profile retrieved successfully.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
 async function getUserProfile(username, userId) {
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({
+      username,
+    });
 
-    if (!user || user === null) {
+    if (!user) {
       const error = {
         status: 404,
         code: "USER_NOT_FOUND",
         message: "The requested user could not be found.",
       };
-      throw new Error(error);
+      throw error;
     }
 
-    if (user._id !== userId) {
-      return {
-        Data: _.omit(user.toObject(), [
-          "_id",
-          "email",
-          "password",
-          "role",
-          "verified",
-          "createdAt",
-          "__v",
-        ]),
-        Message: "User profile retrieved successfully.",
-      };
-    } else if (user._id === userId) {
-      return {
-        Data: _.omit(user.toObject(), [
-          "_id",
-          "password",
-          "role",
-          "verified",
-          "createdAt",
-          "__v",
-        ]),
-        Message: "User profile retrieved successfully.",
-      };
+    let userData;
+    if (user._id.toString() !== userId.toString()) {
+      userData = _.omit(user.toObject(), [
+        "_id",
+        "email",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]);
+    } else {
+      userData = _.omit(user.toObject(), [
+        "_id",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]);
     }
+
+    return {
+      Data: userData,
+      Message: "User profile retrieved successfully.",
+    };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -214,7 +236,11 @@ async function updateUserProfile(
       Message: "User profile updated successfully.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -237,7 +263,11 @@ async function uploadProfilePicture(userId, filename, fileUrl) {
       Message: "Profile picture uploaded successfully.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -252,7 +282,11 @@ async function forgetPassword(email) {
       Message: "Forgotten password link sent successfully.",
     };
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
@@ -269,13 +303,17 @@ async function confirmPasswordToken(userId, token) {
       return resetForgettenPasswordLink(user.username);
     }
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
 async function resetPassword(userId, token, password) {
   try {
-    const userToken = User.verifyToken(token);
+    const userToken = await User.verifyToken(token);
     if (!userToken) {
       return expiredForgottenPasswordLink();
     }
@@ -294,7 +332,11 @@ async function resetPassword(userId, token, password) {
 
     return successForgettenPasswordLink(user.username);
   } catch (error) {
-    throw new Error(error);
+    if (error.status && error.code && error.message) {
+      throw error;
+    } else {
+      throw new Error(error);
+    }
   }
 }
 
