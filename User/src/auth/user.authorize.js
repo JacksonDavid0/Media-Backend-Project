@@ -3,7 +3,7 @@ const User = require("../model/user.model");
 
 async function authorizeUser(req, res, next) {
   const authToken = req.cookies.userToken;
-  console.log(authToken);
+  console.log(req.cookies);
 
   if (!authToken) {
     const error = {
