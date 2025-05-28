@@ -132,6 +132,7 @@ async function getProfile(userId) {
         "lastname",
         "gender",
         "email",
+        "picture",
       ]),
       Message: "User profile retrieved successfully.",
     };
