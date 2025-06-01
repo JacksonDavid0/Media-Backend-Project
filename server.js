@@ -1,3 +1,4 @@
+const http = require("http");
 const cors = require("cors");
 const express = require("express");
 const path = require("path");
@@ -6,6 +7,7 @@ const MailDev = require("maildev");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const postRouter = require("./Post/routes/post.routes");
+const { agenda } = require("./User/src/tasks/user.agenda");
 const { startAgenda } = require("./User/src/tasks/user.agenda");
 const userRouter = require("./User/src/routes/user.routes");
 require("dotenv").config();
@@ -28,7 +30,7 @@ app.use(
   })
 );
 
-app.options("*", cors());
+// app.options("*", cors());
 
 // Start MailDev programmatically
 const maildev = new MailDev({
@@ -81,7 +83,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/post", postRouter);
 
 // Start the server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`listening on ${port}`);
 });
 
