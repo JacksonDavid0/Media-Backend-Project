@@ -30,6 +30,8 @@ app.use(
   })
 );
 
+app.use(express.static("public"));
+
 // app.options("*", cors());
 
 // Start MailDev programmatically
