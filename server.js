@@ -28,7 +28,7 @@ app.use(
   })
 );
 
-// app.options("*", cors());
+app.options("*", cors());
 
 // Start MailDev programmatically
 const maildev = new MailDev({
