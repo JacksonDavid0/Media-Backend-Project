@@ -3,14 +3,8 @@ const validator = require("validator");
 require("dotenv").config();
 
 const postSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: [true, "User ID is required"],
-  },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: [true, "Author is required"],
   },
   content: {
