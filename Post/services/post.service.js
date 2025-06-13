@@ -14,7 +14,7 @@ const getAllPost = async () => {
   }
 };
 
-const addPost = async (userId, content, image) => {
+const saveUserPost = async (userId, content, image) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -24,13 +24,13 @@ const addPost = async (userId, content, image) => {
     const post = new Post(author, content, image);
     await post.save();
     return {
-      Data: _.omit(posts.toObject(), ["__v", "updatedAt"]),
+      Data: _.omit(post.toObject(), ["__v", "updatedAt"]),
       Message: "Post added successfully",
     };
   } catch (error) {}
 };
 
-const likePost = async (postId) => {
+const likeUserPost = async (postId) => {
   try {
     const post = await Post.findOneAndUpdate(
       { _id: postId },
@@ -97,8 +97,8 @@ const deleteUserPost = async (postId) => {
 
 module.exports = {
   getAllPost,
-  addPost,
+  saveUserPost,
   updateUserPost,
-  likePost,
+  likeUserPost,
   deleteUserPost,
 };

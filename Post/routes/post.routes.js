@@ -1,11 +1,24 @@
 const express = require("express");
 const { authorizeUser } = require("../../User/src/auth/user.authorize");
-const { allPost } = require("../controller/post.controller");
+const {
+  allPost,
+  savePost,
+  updatePost,
+  deletePost,
+  likePost,
+} = require("../controller/post.controller");
+const upload = require("../../middleware/upload");
 const postRouter = express.Router();
 
 postRouter.get("/", authorizeUser, allPost);
-postRouter.post("/", authorizeUser, savePost);
+postRouter.post("/save", authorizeUser, route, upload, savePost);
+postRouter.post("/like/:postId", authorizeUser, likePost);
 postRouter.put("/:postId", authorizeUser, updatePost);
 postRouter.delete("/:postId", authorizeUser, deletePost);
 
 module.exports = postRouter;
+
+function route(req, res, next) {
+  req.route = "post";
+  next();
+}

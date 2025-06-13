@@ -1,4 +1,4 @@
-const { handleError } = require("../middleware/errorHandler");
+const { handleError } = require("../../../middleware/errorHandler");
 const {
   register,
   verify,
@@ -10,7 +10,7 @@ const {
   confirmPasswordToken,
   getProfile,
 } = require("../services/user.service");
-const dataValidator = require("../tasks/user.validate");
+const userValidator = require("../../../middleware/user.validator");
 
 async function registerUser(req, res) {
   const {
@@ -26,7 +26,7 @@ async function registerUser(req, res) {
   } = req.body;
 
   try {
-    await dataValidator({
+    await userValidator({
       username,
       firstname,
       lastname,
@@ -69,7 +69,7 @@ async function verifyUser(req, res) {
 async function loginUser(req, res) {
   const { email } = req.body;
   try {
-    await dataValidator({ email });
+    await userValidator({ email });
     const user = await login(email);
     res.cookie("userToken", user.Token, {
       httpOnly: true,
@@ -100,7 +100,7 @@ async function userProfile(req, res) {
   const { username } = req.params;
   const userId = req.authorizeUserId;
   try {
-    await dataValidator({ username });
+    await userValidator({ username });
     const user = await getUserProfile(username, userId);
     // console.log(user.Message);
     return res.status(200).send(user.Data);
@@ -132,7 +132,7 @@ async function updateProfile(req, res) {
   const userId = req.authorizeUserId;
 
   try {
-    await dataValidator({
+    await userValidator({
       username,
       firstname,
       lastname,
@@ -163,7 +163,7 @@ async function updateProfile(req, res) {
 
 async function uploadPicture(req, res) {
   try {
-    await dataValidator({ picture: req.file.image });
+    await userValidator({ picture: req.file.image });
     const userId = req.authorizeUserId;
     const user = await uploadProfilePicture(
       userId,
@@ -180,7 +180,7 @@ async function uploadPicture(req, res) {
 async function forgettenPassword(req, res) {
   const { email } = req.body;
   try {
-    await dataValidator({ email });
+    await userValidator({ email });
     const user = await forgetPassword(email);
     res.status(200).send(user.Data);
     // console.log(user.Message);

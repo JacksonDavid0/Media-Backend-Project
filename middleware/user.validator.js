@@ -1,7 +1,6 @@
 const Joi = require("joi");
 
-// Define the Joi schema based on your Mongoose schema
-const userSchema = Joi.object({
+const userSchemaValidation = Joi.object({
   username: Joi.string()
     .trim()
     .min(3)
@@ -107,16 +106,10 @@ const userSchema = Joi.object({
   verified: Joi.boolean().default(false).messages({
     "boolean.base": "Verified must be a boolean",
   }),
-
-  createdAt: Joi.date()
-    .default(() => new Date())
-    .messages({
-      "date.base": "Invalid creation date",
-    }),
 });
 
-const dataValidator = async (data) => {
-  const { error } = userSchema.validate(data, {
+const userValidator = async (data) => {
+  const { error } = userSchemaValidation.validate(data, {
     abortEarly: false,
     presence: "optional",
   });
@@ -135,4 +128,4 @@ const dataValidator = async (data) => {
   return true;
 };
 
-module.exports = dataValidator;
+module.exports = userValidator;

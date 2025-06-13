@@ -44,7 +44,7 @@ const upload = (req, res, next) => {
   }).single("image");
 
   upload(req, res, (err) => {
-    if (!req.file) {
+    if (!req.file && req.route === "user") {
       const error = {
         status: 400,
         code: "NO_FILE_UPLOADED",
@@ -76,11 +76,16 @@ const upload = (req, res, next) => {
           return handleError(req, res, error);
         } else {
           err.status = 400;
+          console.log("1here");
+
           return handleError(req, res, err);
         }
       } else {
-        err.status = 400;
-        return handleError(req, res, err);
+        if (req.route === "user") {
+          err.status = 400;
+          console.log("2here");
+          return handleError(req, res, err);
+        }
       }
     }
     next();
