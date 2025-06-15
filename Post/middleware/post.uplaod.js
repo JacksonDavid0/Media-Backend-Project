@@ -1,6 +1,6 @@
 const multer = require("multer");
 const path = require("path");
-const { handleError } = require("./errorHandler");
+const { handleError } = require("../../errorHandler");
 
 const storage = multer.diskStorage({
   destination: "./public/uploads",
@@ -34,8 +34,8 @@ function checkFileType(file, cb) {
   }
 }
 
-const upload = (req, res, next) => {
-  const upload = multer({
+const postUpload = (req, res, next) => {
+  const uploadImage = multer({
     storage: storage,
     limits: { fileSize: 1000000 },
     fileFilter: function (req, file, cb) {
@@ -43,22 +43,8 @@ const upload = (req, res, next) => {
     },
   }).single("image");
 
-  upload(req, res, (err) => {
-    if (!req.file && req.route === "user") {
-      const error = {
-        status: 400,
-        code: "NO_FILE_UPLOADED",
-        message: "No file was uploaded with the request.",
-        details: [
-          {
-            field: "file",
-            message: "A file is required.",
-          },
-        ],
-      };
-      return handleError(req, res, error);
-    }
-    if (err) {
+  uploadImage(req, res, (err) => {
+    if (err && req.file) {
       if (err instanceof multer.MulterError) {
         if (err.code === "LIMIT_FILE_SIZE") {
           const error = {
@@ -76,20 +62,15 @@ const upload = (req, res, next) => {
           return handleError(req, res, error);
         } else {
           err.status = 400;
-          console.log("1here");
-
           return handleError(req, res, err);
         }
       } else {
-        if (req.route === "user") {
-          err.status = 400;
-          console.log("2here");
-          return handleError(req, res, err);
-        }
+        err.status = 400;
+        return handleError(req, res, err);
       }
     }
     next();
   });
 };
 
-module.exports = upload;
+module.exports = postUpload;

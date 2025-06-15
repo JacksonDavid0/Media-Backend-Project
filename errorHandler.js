@@ -15,7 +15,7 @@ function handleError(req, res, error) {
       },
     };
 
-    res.status(status).json(errorResponse);
+    return res.status(status).json(errorResponse);
   }
 }
 

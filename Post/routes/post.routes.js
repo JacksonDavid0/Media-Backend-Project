@@ -7,18 +7,13 @@ const {
   deletePost,
   likePost,
 } = require("../controller/post.controller");
-const upload = require("../../middleware/upload");
+const postUpload = require("../middleware/post.uplaod");
 const postRouter = express.Router();
 
 postRouter.get("/", authorizeUser, allPost);
-postRouter.post("/save", authorizeUser, route, upload, savePost);
+postRouter.post("/save", authorizeUser, postUpload, savePost);
 postRouter.post("/like/:postId", authorizeUser, likePost);
 postRouter.put("/:postId", authorizeUser, updatePost);
 postRouter.delete("/:postId", authorizeUser, deletePost);
 
 module.exports = postRouter;
-
-function route(req, res, next) {
-  req.route = "post";
-  next();
-}

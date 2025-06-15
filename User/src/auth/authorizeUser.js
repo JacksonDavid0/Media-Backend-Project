@@ -1,4 +1,4 @@
-const { handleError } = require("../../../middleware/errorHandler");
+const { handleError } = require("../../../errorHandler");
 const User = require("../model/user.model");
 require("dotenv").config();
 

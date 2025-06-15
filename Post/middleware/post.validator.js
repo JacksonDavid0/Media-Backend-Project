@@ -17,7 +17,7 @@ const postSchemaValidation = Joi.object({
   //       "string.uri": "Invalid image URL",
   //     }),
 
-  likes: Joi.number().default(0),
+  // likes: Joi.number().default(0),
 });
 
 const postValidator = async (data) => {
@@ -27,6 +27,8 @@ const postValidator = async (data) => {
   });
 
   if (error) {
+    console.log(error);
+
     const err = {
       status: 400,
       code: "INVALID_INPUT_DATA",

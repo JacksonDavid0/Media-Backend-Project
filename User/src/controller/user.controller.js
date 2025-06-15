@@ -1,4 +1,4 @@
-const { handleError } = require("../../../middleware/errorHandler");
+const { handleError } = require("../../../errorHandler");
 const {
   register,
   verify,
@@ -10,7 +10,7 @@ const {
   confirmPasswordToken,
   getProfile,
 } = require("../services/user.service");
-const userValidator = require("../../../middleware/user.validator");
+const userValidator = require("../middleware/user.validator");
 
 async function registerUser(req, res) {
   const {

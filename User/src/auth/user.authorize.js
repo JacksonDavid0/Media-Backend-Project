@@ -1,4 +1,4 @@
-const { handleError } = require("../../../middleware/errorHandler");
+const { handleError } = require("../../../errorHandler");
 const User = require("../model/user.model");
 
 async function authorizeUser(req, res, next) {
@@ -11,11 +11,10 @@ async function authorizeUser(req, res, next) {
       message: "Authentication token is missing or invalid.",
       details: [{ message: "Please log in to obtain a valid token." }],
     };
-    handleError(req, res, error);
+    return handleError(req, res, error);
   }
 
-  const token = authToken;
-  const userId = await User.verifyToken(token);
+  const userId = await User.verifyToken(authToken);
   if (!userId) {
     const error = {
       status: 401,
@@ -23,7 +22,7 @@ async function authorizeUser(req, res, next) {
       message: "The provided authentication token is invalid or expired.",
       details: [{ message: "Please log in again to obtain a new token." }],
     };
-    handleError(req, res, error);
+    return handleError(req, res, error);
   }
 
   const user = await User.verifyUser(userId);
@@ -33,7 +32,7 @@ async function authorizeUser(req, res, next) {
       code: "USER_NOT_FOUND",
       message: "The requested user could not be found.",
     };
-    handleError(req, res, error);
+    return handleError(req, res, error);
   }
   req.authorizeUserId = userId;
   next();

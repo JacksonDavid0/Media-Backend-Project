@@ -1,5 +1,5 @@
-const { handleError } = require("../../middleware/errorHandler");
-const { postValidator } = require("../../middleware/post.validator");
+const { handleError } = require("../../errorHandler");
+const { postValidator } = require("../middleware/post.validator");
 const {
   getAllPost,
   updateUserPost,
@@ -10,8 +10,11 @@ const {
 
 const allPost = async (req, res) => {
   try {
-    const post = await getAllPost();
-    res.status(200).send(post.Data);
+    const { Data, error } = await getAllPost();
+    if (error) {
+      handleError(req, res, error);
+    }
+    res.status(200).send(Data);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -22,10 +25,11 @@ const savePost = async (req, res) => {
   try {
     const { content } = req.body;
     const image = {
-      filename: req.file.image,
+      filename: req.file.filename,
       fileUrl: `/uploads/${req.file.filename}`,
     };
-    postValidator({ content });
+
+    // await postValidator(content);
     const post = await saveUserPost(userId, content, image);
     res.status(201).send(post.Data);
   } catch (error) {

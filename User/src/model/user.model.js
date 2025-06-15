@@ -151,7 +151,7 @@ userSchema.statics.verifyToken = async function (token) {
     const decoded = jwt.verify(token, secret);
     return decoded.id;
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     throw new Error("Invalid Token");
   }
 };

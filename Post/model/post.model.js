@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
 const validator = require("validator");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const postSchema = new mongoose.Schema({
@@ -47,11 +47,19 @@ const postSchema = new mongoose.Schema({
 
 postSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
+  this.content =
+    this.content.slice(0, 1).toUpperCase() +
+    this.content.slice(1).toLowerCase();
   next();
 });
 
 postSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: Date.now() });
+  if (this.content) {
+    this.content =
+      this.content.slice(0, 1).toUpperCase() +
+      this.content.slice(1).toLowerCase();
+  }
   next();
 });
 
