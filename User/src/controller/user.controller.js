@@ -55,17 +55,6 @@ async function registerUser(req, res) {
   }
 }
 
-async function verifyUser(req, res) {
-  const { userId, token } = req.params;
-  try {
-    const user = await verify(userId, token);
-    res.status(200).send(user.Data);
-    // console.log(user.Message);
-  } catch (error) {
-    handleError(req, res, error);
-  }
-}
-
 async function loginUser(req, res) {
   const { email } = req.body;
   try {
@@ -78,7 +67,7 @@ async function loginUser(req, res) {
       maxAge: 604800000,
     });
 
-    res.status(200).send(user.Data);
+    res.status(200).send(user);
     // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
@@ -89,7 +78,7 @@ async function profile(req, res) {
   const userId = req.authorizeUserId;
   try {
     const user = await getProfile(userId);
-    res.status(200).send(user.Data);
+    res.status(200).send(user);
     // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
@@ -103,7 +92,7 @@ async function userProfile(req, res) {
     await userValidator({ username });
     const user = await getUserProfile(username, userId);
     // console.log(user.Message);
-    return res.status(200).send(user.Data);
+    return res.status(200).send(user);
   } catch (error) {
     console.log(error);
     handleError(req, res, error);
@@ -154,7 +143,7 @@ async function updateProfile(req, res) {
       dob,
       address
     );
-    res.status(200).send(user.Data);
+    res.status(200).send(user);
     // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
@@ -168,9 +157,9 @@ async function uploadPicture(req, res) {
     const user = await uploadProfilePicture(
       userId,
       req.file.filename,
-      `/uploads/${req.file.filename}`
+      `/userUploads/${req.file.filename}`
     );
-    res.status(200).send(user.Data);
+    res.status(200).send(user);
     // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
@@ -182,8 +171,17 @@ async function forgettenPassword(req, res) {
   try {
     await userValidator({ email });
     const user = await forgetPassword(email);
+    res.status(200).send(user);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
+async function verifyUser(req, res) {
+  const { userId, token } = req.params;
+  try {
+    const user = await verify(userId, token);
     res.status(200).send(user.Data);
-    // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);
   }

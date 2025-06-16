@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const validator = require("validator");
-const { boolean } = require("joi");
+const { boolean, string } = require("joi");
+const { dateNow } = require("../../../errorHandler");
 require("dotenv").config();
 const secret = process.env.JWT_Secret;
 
@@ -134,8 +135,8 @@ const userSchema = new mongoose.Schema({
   },
 
   createdAt: {
-    type: Date,
-    default: Date.now(),
+    type: string,
+    default: dateNow(),
   },
 });
 

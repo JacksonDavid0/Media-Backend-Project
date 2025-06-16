@@ -3,7 +3,7 @@ const path = require("path");
 const { handleError } = require("../../errorHandler");
 
 const storage = multer.diskStorage({
-  destination: "./public/uploads",
+  destination: "./public/postUploads",
   filename: function (req, file, cb) {
     cb(
       null,

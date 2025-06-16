@@ -12,6 +12,7 @@ const {
   successForgettenPasswordLink,
 } = require("../mail/sendmail");
 const successPasswordLink = require("../template/successPasswordTemplate");
+const { dateNow } = require("../../../errorHandler");
 
 async function register(
   username,
@@ -252,7 +253,7 @@ async function uploadProfilePicture(userId, filename, fileUrl) {
         picture: {
           filename: filename,
           fileUrl: fileUrl,
-          uploadAt: Date.now(),
+          uploadAt: dateNow(),
         },
       },
       runValidators: true,
@@ -279,8 +280,7 @@ async function forgetPassword(email) {
     await sendForgotPasswordLink(user.username, user.email, user._id, token);
 
     return {
-      Data: `If an account with this email ${email} exists, we've sent a password reset link.`,
-      Message: "Forgotten password link sent successfully.",
+      message: `If an account with this email ${email} exists, we've sent a password reset link.`,
     };
   } catch (error) {
     if (error.status && error.code && error.message) {

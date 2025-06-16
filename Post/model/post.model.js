@@ -1,30 +1,40 @@
 const validator = require("validator");
 const mongoose = require("mongoose");
+const { dateNow } = require("../../errorHandler");
+const { string } = require("joi");
 require("dotenv").config();
 
 const postSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: [true, "User ID is required"],
+  },
   author: {
     type: String,
     required: [true, "Author is required"],
+  },
+  authorImage: {
+    type: {
+      _id: Boolean,
+      filename: String,
+      fileUrl: String,
+      uploadAt: {
+        type: Date,
+      },
+    },
+    default: {},
   },
   content: {
     type: String,
     required: [true, "Content is required"],
     trim: true,
-    minLength: [10, "Content must be at least 10 characters"],
+    minLength: [2, "Content must be at least 2 characters"],
   },
   image: {
     type: {
       _id: Boolean,
       filename: String,
-      fileUrl: {
-        type: String,
-        validate: {
-          validator: (value) =>
-            !value || validator.isURL(value, { require_protocol: true }),
-          message: "Invalid Image URL",
-        },
-      },
+      fileUrl: String,
       uploadAt: {
         type: Date,
       },
@@ -36,17 +46,17 @@ const postSchema = new mongoose.Schema({
     default: 0,
   },
   createdAt: {
-    type: Date,
-    default: Date.now,
+    type: string,
+    default: dateNow(),
   },
   updatedAt: {
-    type: Date,
-    default: Date.now,
+    type: string,
+    default: dateNow(),
   },
 });
 
 postSchema.pre("save", function (next) {
-  this.updatedAt = Date.now();
+  this.updatedAt = dateNow();
   this.content =
     this.content.slice(0, 1).toUpperCase() +
     this.content.slice(1).toLowerCase();
@@ -54,7 +64,7 @@ postSchema.pre("save", function (next) {
 });
 
 postSchema.pre("findOneAndUpdate", function (next) {
-  this.set({ updatedAt: Date.now() });
+  this.set({ updatedAt: dateNow() });
   if (this.content) {
     this.content =
       this.content.slice(0, 1).toUpperCase() +

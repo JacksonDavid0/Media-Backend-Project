@@ -7,16 +7,32 @@ const getAllPost = async () => {
     const posts = await Post.find();
 
     if (!posts || posts.length === 0) {
-      const error = {
-        status: 404,
-        code: "Not_Found",
+      const Data = {
         message: "No posts found.",
-        details: ["The requested resource could not be found."],
       };
-      return { error };
+      return { Data };
     }
     return {
-      Data: _.omit(posts.toObject(), ["__v", "updatedAt"]),
+      Data: posts,
+      Message: "Successfully fetched posts ",
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getUserPost = async (userId) => {
+  try {
+    const posts = await Post.find({ userId });
+
+    if (!posts || posts.length === 0) {
+      const Data = {
+        message: "No posts found.",
+      };
+      return { Data };
+    }
+    return {
+      Data: posts,
       Message: "Successfully fetched posts ",
     };
   } catch (error) {
@@ -31,7 +47,8 @@ const saveUserPost = async (userId, content, image) => {
       throw new Error("User not found");
     }
     const author = `${user.firstname} ${user.lastname}`;
-    const post = new Post(author, content, image);
+    const authorImage = user.picture;
+    const post = new Post({ author, authorImage, content, image });
     await post.save();
 
     return {
@@ -44,6 +61,26 @@ const saveUserPost = async (userId, content, image) => {
 };
 
 const likeUserPost = async (postId) => {
+  try {
+    const post = await Post.findOneAndUpdate(
+      { _id: postId },
+      { $inc: { likes: 1 } },
+      {
+        runValidators: true,
+        new: true,
+      }
+    );
+    if (!post) {
+      throw new Error("Post not found");
+    }
+    post.likes += 1;
+    await post.save();
+    return {};
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const dislikeUserPost = async (postId) => {
   try {
     const post = await Post.findOneAndUpdate(
       { _id: postId },
@@ -110,8 +147,10 @@ const deleteUserPost = async (postId) => {
 
 module.exports = {
   getAllPost,
+  getUserPost,
   saveUserPost,
   updateUserPost,
   likeUserPost,
+  dislikeUserPost,
   deleteUserPost,
 };

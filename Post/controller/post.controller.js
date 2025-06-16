@@ -6,14 +6,22 @@ const {
   deleteUserPost,
   saveUserPost,
   likeUserPost,
+  dislikeUserPost,
 } = require("../services/post.service");
 
 const allPost = async (req, res) => {
   try {
-    const { Data, error } = await getAllPost();
-    if (error) {
-      handleError(req, res, error);
-    }
+    const { Data } = await getAllPost();
+    res.status(200).send(Data);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+};
+
+const userPost = async (req, res) => {
+  const userId = req.authorizeUserId;
+  try {
+    const { Data } = await getUserPost();
     res.status(200).send(Data);
   } catch (error) {
     handleError(req, res, error);
@@ -26,7 +34,7 @@ const savePost = async (req, res) => {
     const { content } = req.body;
     const image = {
       filename: req.file.filename,
-      fileUrl: `/uploads/${req.file.filename}`,
+      fileUrl: `/postUploads/${req.file.filename}`,
     };
 
     // await postValidator(content);
@@ -46,6 +54,15 @@ const likePost = async (req, res) => {
     handleError(req, res, error);
   }
 };
+const dislikePost = async (req, res) => {
+  const { postId } = req.params;
+  try {
+    const post = await dislikeUserPost(postId);
+    res.status(200).send(post.Data);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+};
 
 const updatePost = async (req, res) => {
   const { postId } = req.params;
@@ -55,7 +72,7 @@ const updatePost = async (req, res) => {
       filename: req.file.image,
       fileUrl: `/uploads/${req.file.filename}`,
     };
-    postValidator({ content });
+    // postValidator({ content });
     const post = await updateUserPost(postId, content, image);
     res.status(200).send(post.Data);
   } catch (error) {
@@ -73,4 +90,12 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = { allPost, savePost, likePost, updatePost, deletePost };
+module.exports = {
+  allPost,
+  userPost,
+  savePost,
+  likePost,
+  dislikePost,
+  updatePost,
+  deletePost,
+};

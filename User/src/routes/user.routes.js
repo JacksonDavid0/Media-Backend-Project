@@ -19,13 +19,13 @@ const { authorizeUser } = require("../auth/user.authorize");
 const userUpload = require("../middleware/user.upload");
 
 userRouter.post("/register", authenticateUser, registerUser);
-userRouter.get("/verifyUser/signature=:userId&:token", verifyUser);
 userRouter.post("/login", authUser, loginUser);
-userRouter.get("/profile", authorizeUser, profile);
+userRouter.get("/auth", authorizeUser, profile);
 userRouter.get("/profile/:username", authorizeUser, userProfile);
 userRouter.put("/profile/update", authorizeUser, updateProfile);
 userRouter.post("/profile/upload", authorizeUser, userUpload, uploadPicture);
 userRouter.post("/forget-Password", forgettenPassword);
+userRouter.get("/verifyUser/signature=:userId&:token", verifyUser);
 userRouter.get(
   "/corfirmPasswordToken/signature=:userId&:token",
   confirmForgettenPasswordToken
