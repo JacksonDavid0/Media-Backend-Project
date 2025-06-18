@@ -67,7 +67,7 @@ async function loginUser(req, res) {
       maxAge: 604800000,
     });
 
-    res.status(200).send(user);
+    res.status(200).send(user.Data, user.Message);
     // console.log(user.Message);
   } catch (error) {
     handleError(req, res, error);

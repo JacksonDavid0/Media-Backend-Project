@@ -7,6 +7,34 @@ const secret = process.env.SECRET;
 async function authUser(req, res, next) {
   const { email, password } = req.body;
   try {
+    if (!email) {
+      const error = {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Email is a required field.",
+        details: [
+          {
+            field: "email",
+            message: "Missing required",
+          },
+        ],
+      };
+      return handleError(req, res, error);
+    } else if (!password) {
+      const error = {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Password is a required field.",
+        details: [
+          {
+            field: "password",
+            message: "Missing required",
+          },
+        ],
+      };
+      return handleError(req, res, error);
+    }
+
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -22,10 +50,11 @@ async function authUser(req, res, next) {
           },
         ],
       };
-      handleError(req, res, error);
-    }
-    const match = user.comparePassword(password);
+      console.log("User not found");
 
+      return handleError(req, res, error);
+    }
+    const match = await user.comparePassword(password);
     if (!match) {
       const error = {
         status: 401,
@@ -39,7 +68,8 @@ async function authUser(req, res, next) {
           },
         ],
       };
-      handleError(req, res, error);
+
+      return handleError(req, res, error);
     }
 
     if (user.verified === false) {
@@ -51,7 +81,7 @@ async function authUser(req, res, next) {
           { message: "Please check your email for a verification link." },
         ],
       };
-      handleError(req, res, error);
+      return handleError(req, res, error);
     }
     next();
   } catch (error) {

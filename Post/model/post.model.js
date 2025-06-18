@@ -1,7 +1,6 @@
 const validator = require("validator");
 const mongoose = require("mongoose");
 const { dateNow } = require("../../errorHandler");
-const { string } = require("joi");
 require("dotenv").config();
 
 const postSchema = new mongoose.Schema({
@@ -46,17 +45,18 @@ const postSchema = new mongoose.Schema({
     default: 0,
   },
   createdAt: {
-    type: string,
+    type: String,
     default: dateNow(),
   },
   updatedAt: {
-    type: string,
+    type: String,
     default: dateNow(),
   },
 });
 
 postSchema.pre("save", function (next) {
   this.updatedAt = dateNow();
+  this.createdAt = dateNow();
   this.content =
     this.content.slice(0, 1).toUpperCase() +
     this.content.slice(1).toLowerCase();

@@ -48,7 +48,7 @@ const saveUserPost = async (userId, content, image) => {
     }
     const author = `${user.firstname} ${user.lastname}`;
     const authorImage = user.picture;
-    const post = new Post({ author, authorImage, content, image });
+    const post = new Post({ userId, author, authorImage, content, image });
     await post.save();
 
     return {

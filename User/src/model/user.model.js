@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const validator = require("validator");
-const { boolean, string } = require("joi");
 const { dateNow } = require("../../../errorHandler");
 require("dotenv").config();
 const secret = process.env.JWT_Secret;
@@ -135,7 +134,7 @@ const userSchema = new mongoose.Schema({
   },
 
   createdAt: {
-    type: string,
+    type: String,
     default: dateNow(),
   },
 });
@@ -178,6 +177,7 @@ userSchema.pre("save", async function (next) {
     this.lastname.slice(1).toLowerCase();
   this.firstname = firstname;
   this.lastname = lastname;
+  this.createdAt = dateNow();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
