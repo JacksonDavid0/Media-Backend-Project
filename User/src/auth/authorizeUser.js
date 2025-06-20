@@ -1,4 +1,5 @@
 const { handleError } = require("../../../errorHandler");
+const userValidator = require("../middleware/user.validator");
 const User = require("../model/user.model");
 require("dotenv").config();
 
@@ -12,12 +13,6 @@ async function authUser(req, res, next) {
         status: 400,
         code: "BAD_REQUEST",
         message: "Email is a required field.",
-        details: [
-          {
-            field: "email",
-            message: "Missing required",
-          },
-        ],
       };
       return handleError(req, res, error);
     } else if (!password) {
@@ -25,15 +20,11 @@ async function authUser(req, res, next) {
         status: 400,
         code: "BAD_REQUEST",
         message: "Password is a required field.",
-        details: [
-          {
-            field: "password",
-            message: "Missing required",
-          },
-        ],
       };
       return handleError(req, res, error);
     }
+
+    await userValidator({ email, password });
 
     const user = await User.findOne({ email });
 
@@ -42,13 +33,6 @@ async function authUser(req, res, next) {
         status: 401,
         code: "INVALID_CREDENTIALS",
         message: "Invalid email or password.",
-        details: [
-          { field: "email", message: "Please check your email and try again." },
-          {
-            field: "password",
-            message: "Please check your password and try again.",
-          },
-        ],
       };
       console.log("User not found");
 
@@ -60,13 +44,6 @@ async function authUser(req, res, next) {
         status: 401,
         code: "INVALID_CREDENTIALS",
         message: "Invalid email or password.",
-        details: [
-          { field: "email", message: "Please check your email and try again." },
-          {
-            field: "password",
-            message: "Please check your password and try again.",
-          },
-        ],
       };
 
       return handleError(req, res, error);

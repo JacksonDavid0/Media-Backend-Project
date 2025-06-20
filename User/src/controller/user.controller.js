@@ -37,6 +37,15 @@ async function registerUser(req, res) {
       address,
       password,
     });
+
+    let picture = {};
+    if (req.file) {
+      picture = {
+        filename: req.file.filename,
+        fileUrl: `/userUploads/${req.file.filename}`,
+      };
+    }
+
     const user = await register(
       username,
       firstname,
@@ -46,10 +55,10 @@ async function registerUser(req, res) {
       phone,
       dob,
       address,
+      picture,
       password
     );
     res.status(201).json(user);
-    // console.log(user.Data);
   } catch (error) {
     handleError(req, res, error);
   }
@@ -58,7 +67,6 @@ async function registerUser(req, res) {
 async function loginUser(req, res) {
   const { email } = req.body;
   try {
-    await userValidator({ email });
     const user = await login(email);
     res.cookie("userToken", user.Token, {
       httpOnly: true,
@@ -69,6 +77,16 @@ async function loginUser(req, res) {
 
     res.status(200).send(user.Data, user.Message);
     // console.log(user.Message);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
+async function validateUser(req, res) {
+  const body = req.body;
+  try {
+    await userValidator(body);
+    return res.status(200).send();
   } catch (error) {
     handleError(req, res, error);
   }
@@ -119,7 +137,10 @@ async function updateProfile(req, res) {
   const { username, firstname, lastname, gender, email, phone, dob, address } =
     req.body;
   const userId = req.authorizeUserId;
-
+  const picture = {
+    filename: req.file.filename,
+    fileUrl: `/postUploads/${req.file.filename}`,
+  };
   try {
     await userValidator({
       username,
@@ -130,6 +151,7 @@ async function updateProfile(req, res) {
       phone,
       dob,
       address,
+      picture,
     });
 
     const user = await updateUserProfile(
@@ -221,6 +243,7 @@ module.exports = {
   registerUser,
   verifyUser,
   loginUser,
+  validateUser,
   profile,
   userProfile,
   updateProfile,

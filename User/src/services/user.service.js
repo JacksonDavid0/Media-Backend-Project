@@ -23,6 +23,7 @@ async function register(
   phone,
   dob,
   address,
+  picture,
   password
 ) {
   try {
@@ -35,6 +36,7 @@ async function register(
       phone: phone,
       dob: dob,
       address: address,
+      picture: picture,
       password: password,
     });
     await user.save();
@@ -205,7 +207,8 @@ async function updateUserProfile(
   email,
   phone,
   dob,
-  address
+  address,
+  picture
 ) {
   try {
     const user = await User.findOneAndUpdate(
@@ -220,6 +223,7 @@ async function updateUserProfile(
           phone,
           dob,
           address,
+          picture,
         },
         runValidators: true,
         new: true,
@@ -246,32 +250,32 @@ async function updateUserProfile(
   }
 }
 
-async function uploadProfilePicture(userId, filename, fileUrl) {
-  try {
-    const user = await User.findByIdAndUpdate(userId, {
-      $set: {
-        picture: {
-          filename: filename,
-          fileUrl: fileUrl,
-          uploadAt: dateNow(),
-        },
-      },
-      runValidators: true,
-      new: true,
-    });
+// async function uploadProfilePicture(userId, filename, fileUrl) {
+//   try {
+//     const user = await User.findByIdAndUpdate(userId, {
+//       $set: {
+//         picture: {
+//           filename: filename,
+//           fileUrl: fileUrl,
+//           uploadAt: dateNow(),
+//         },
+//       },
+//       runValidators: true,
+//       new: true,
+//     });
 
-    return {
-      Data: user.picture,
-      Message: "Profile picture uploaded successfully.",
-    };
-  } catch (error) {
-    if (error.status && error.code && error.message) {
-      throw error;
-    } else {
-      throw new Error(error);
-    }
-  }
-}
+//     return {
+//       Data: user.picture,
+//       Message: "Profile picture uploaded successfully.",
+//     };
+//   } catch (error) {
+//     if (error.status && error.code && error.message) {
+//       throw error;
+//     } else {
+//       throw new Error(error);
+//     }
+//   }
+// }
 
 async function forgetPassword(email) {
   try {
@@ -348,7 +352,7 @@ module.exports = {
   getProfile,
   getUserProfile,
   updateUserProfile,
-  uploadProfilePicture,
+  // uploadProfilePicture,
   forgetPassword,
   confirmPasswordToken,
   resetPassword,

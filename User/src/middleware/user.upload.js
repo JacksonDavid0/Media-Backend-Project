@@ -44,21 +44,7 @@ const userUpload = (req, res, next) => {
   }).single("image");
 
   uploadImage(req, res, (err) => {
-    if (!req.file) {
-      const error = {
-        status: 400,
-        code: "NO_FILE_UPLOADED",
-        message: "No file was uploaded with the request.",
-        details: [
-          {
-            field: "file",
-            message: "A file is required.",
-          },
-        ],
-      };
-      return handleError(req, res, error);
-    }
-    if (err) {
+    if (err && req.file) {
       if (err instanceof multer.MulterError) {
         if (err.code === "LIMIT_FILE_SIZE") {
           const error = {

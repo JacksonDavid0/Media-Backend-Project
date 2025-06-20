@@ -47,7 +47,7 @@ const userSchemaValidation = Joi.object({
   gender: Joi.string()
     .trim()
     .lowercase()
-    .valid("male", "female", "other", "")
+    .valid("male", "female", "other", "prefer not to say", "")
     .messages({
       "string.base": "Gender must be a string",
       "string.empty": "Gender cannot be empty",

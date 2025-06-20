@@ -14,6 +14,14 @@ function handleError(req, res, error) {
         path: req.originalUrl,
       },
     };
+    if (
+      typeof errorResponse.error.details === "string" &&
+      errorResponse.error.details.split(":")[0] === "ValidationError"
+    ) {
+      errorResponse.error.details =
+        errorResponse.error.details.split(":")[2] ||
+        errorResponse.error.details;
+    }
 
     return res.status(status).json(errorResponse);
   }
