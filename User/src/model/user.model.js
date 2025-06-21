@@ -103,8 +103,7 @@ const userSchema = new mongoose.Schema({
       fileUrl: {
         type: String,
         validate: {
-          validator: (value) =>
-            !value || validator.isURL(value, { require_protocol: true }),
+          validator: (value) => !value || validator.isURL(value),
           message: "Invalid picture URL",
         },
       },

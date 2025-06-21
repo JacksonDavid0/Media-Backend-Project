@@ -3,8 +3,6 @@ const userValidator = require("../middleware/user.validator");
 const User = require("../model/user.model");
 require("dotenv").config();
 
-const secret = process.env.SECRET;
-
 async function authUser(req, res, next) {
   const { email, password } = req.body;
   try {
@@ -34,7 +32,6 @@ async function authUser(req, res, next) {
         code: "INVALID_CREDENTIALS",
         message: "Invalid email or password.",
       };
-      console.log("User not found");
 
       return handleError(req, res, error);
     }

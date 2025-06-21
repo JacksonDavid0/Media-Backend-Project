@@ -92,23 +92,11 @@ async function validateUser(req, res) {
   }
 }
 
-async function profile(req, res) {
-  const userId = req.authorizeUserId;
-  try {
-    const user = await getProfile(userId);
-    res.status(200).send(user);
-    // console.log(user.Message);
-  } catch (error) {
-    handleError(req, res, error);
-  }
-}
-
 async function userProfile(req, res) {
-  const { username } = req.params;
+  const { id } = req.params;
   const userId = req.authorizeUserId;
   try {
-    await userValidator({ username });
-    const user = await getUserProfile(username, userId);
+    const user = await getUserProfile(id, userId);
     // console.log(user.Message);
     return res.status(200).send(user);
   } catch (error) {
@@ -244,7 +232,6 @@ module.exports = {
   verifyUser,
   loginUser,
   validateUser,
-  profile,
   userProfile,
   updateProfile,
   uploadPicture,

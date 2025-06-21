@@ -50,7 +50,6 @@ async function authenticateUser(req, res, next) {
         };
         return handleError(req, res, error);
       }
-      console.log("yes");
 
       next();
     } catch (error) {

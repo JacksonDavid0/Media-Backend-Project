@@ -11,8 +11,6 @@ const {
   notFound,
   successForgettenPasswordLink,
 } = require("../mail/sendmail");
-const successPasswordLink = require("../template/successPasswordTemplate");
-const { dateNow } = require("../../../errorHandler");
 
 async function register(
   username,
@@ -39,6 +37,7 @@ async function register(
       picture: picture,
       password: password,
     });
+    console.log(user);
     await user.save();
     scheduleUserDelete(user._id);
     const token = await user.generateToken("24h");
@@ -46,7 +45,7 @@ async function register(
     return {
       Data: `User: ${user.username} registered successfully.`,
       Message:
-        "We've sent a verification link to your email. Please activate/verify your account.",
+        "A verification have been sent to your email. Please activate/verify your account before login.",
     };
   } catch (error) {
     if (error.status && error.code && error.message) {
@@ -124,34 +123,34 @@ async function login(email) {
   }
 }
 
-async function getProfile(userId) {
+async function getUserProfile(id, userId) {
   try {
-    const user = await User.findOne({ _id: userId });
-
-    return {
-      Data: _.pick(user.toObject(), [
-        "username",
-        "firstname",
-        "lastname",
-        "gender",
-        "email",
-        "picture",
-      ]),
-      Message: "User profile retrieved successfully.",
-    };
-  } catch (error) {
-    if (error.status && error.code && error.message) {
-      throw error;
-    } else {
-      throw new Error(error);
+    if (!id) {
+      const user = await User.findOne({ _id: userId });
+      if (!user) {
+        const error = {
+          status: 404,
+          code: "USER_NOT_FOUND",
+          message: "The requested user could not be found.",
+        };
+        throw error;
+      }
+      const userData = _.omit(user.toObject(), [
+        "_id",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]);
+      return {
+        Data: userData,
+        Message: "User profile retrieved successfully.",
+      };
     }
-  }
-}
 
-async function getUserProfile(username, userId) {
-  try {
     const user = await User.findOne({
-      username,
+      _id: id,
     });
 
     if (!user) {
@@ -168,6 +167,7 @@ async function getUserProfile(username, userId) {
       userData = _.omit(user.toObject(), [
         "_id",
         "email",
+        "phone",
         "password",
         "role",
         "verified",
@@ -349,7 +349,6 @@ module.exports = {
   register,
   verify,
   login,
-  getProfile,
   getUserProfile,
   updateUserProfile,
   // uploadProfilePicture,
