@@ -19,7 +19,6 @@ async function register(username, email, password) {
       email,
       password,
     });
-    console.log(user);
     await user.save();
     scheduleUserDelete(user._id);
     const token = await user.generateToken("24h");

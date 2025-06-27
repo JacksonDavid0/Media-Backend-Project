@@ -136,6 +136,7 @@ async function forgettenPassword(req, res) {
 
 async function verifyUser(req, res) {
   const { userId, token } = req.params;
+  console.log("called");
   try {
     const user = await verify(userId, token);
     res.status(200).send(user.Data);
