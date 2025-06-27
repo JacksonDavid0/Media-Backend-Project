@@ -77,7 +77,6 @@ const userSchemaValidation = Joi.object({
   address: Joi.string().trim().allow("").max(100).messages({
     "string.base": "Address must be a string",
     "string.trim": "Address cannot contain leading or trailing whitespace",
-    "string.max": "Address must be at most {#limit} characters long",
   }),
 
   picture: Joi.string()

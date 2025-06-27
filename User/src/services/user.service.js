@@ -12,30 +12,12 @@ const {
   successForgettenPasswordLink,
 } = require("../mail/sendmail");
 
-async function register(
-  username,
-  firstname,
-  lastname,
-  gender,
-  email,
-  phone,
-  dob,
-  address,
-  picture,
-  password
-) {
+async function register(username, email, password) {
   try {
     const user = new User({
-      username: username,
-      firstname: firstname,
-      lastname: lastname,
-      gender: gender,
-      email: email,
-      phone: phone,
-      dob: dob,
-      address: address,
-      picture: picture,
-      password: password,
+      username,
+      email,
+      password,
     });
     console.log(user);
     await user.save();
@@ -123,7 +105,33 @@ async function login(email) {
   }
 }
 
-async function getUserProfile(id, userId) {
+async function getUserProfile(userId) {
+  try {
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      const error = {
+        status: 404,
+        code: "USER_NOT_FOUND",
+        message: "The requested user could not be found.",
+      };
+      throw error;
+    }
+
+    return {
+      Data: _.omit(user.toObject(), [
+        "_id",
+        "password",
+        "role",
+        "verified",
+        "createdAt",
+        "__v",
+      ]),
+      Message: "User profile retrieved successfully.",
+    };
+  } catch (error) {}
+}
+
+async function getViewedUserProfile(id, userId) {
   try {
     if (!id) {
       const user = await User.findOne({ _id: userId });
@@ -198,32 +206,21 @@ async function getUserProfile(id, userId) {
   }
 }
 
-async function updateUserProfile(
-  userId,
-  username,
-  firstname,
-  lastname,
-  gender,
-  email,
-  phone,
-  dob,
-  address,
-  picture
-) {
+async function updateUserProfile(body, userId) {
   try {
     const user = await User.findOneAndUpdate(
       { _id: userId },
       {
         $set: {
-          username,
-          firstname,
-          lastname,
-          gender,
-          email,
-          phone,
-          dob,
-          address,
-          picture,
+          username: body.username,
+          firstname: body.filename,
+          lastname: body.lastname,
+          gender: body.gender,
+          email: body.email,
+          phone: body.phone,
+          dob: body.dob,
+          address: body.address,
+          picture: body.picture,
         },
         runValidators: true,
         new: true,
@@ -350,8 +347,8 @@ module.exports = {
   verify,
   login,
   getUserProfile,
+  getViewedUserProfile,
   updateUserProfile,
-  // uploadProfilePicture,
   forgetPassword,
   confirmPasswordToken,
   resetPassword,

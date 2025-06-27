@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema({
   firstname: {
     type: String,
     trim: true,
-    required: [true, "firstname is require"],
     minLength: [3, "firstname must be at least 3 characters"],
     maxLength: [30, "firstname must be at most 30 characters"],
     validate: {
@@ -35,7 +34,6 @@ const userSchema = new mongoose.Schema({
   lastname: {
     type: String,
     trim: true,
-    required: [true, "Lastname is require"],
     minLength: [3, "lastname must be at least 3 characters"],
     maxLength: [30, "lastname must be at most 30 characters"],
     validate: {
@@ -49,10 +47,9 @@ const userSchema = new mongoose.Schema({
     trim: true,
     default: "",
     lowercase: true,
-    required: [true, "Gender is required"],
     enum: ["male", "female", "other", ""],
     validate: {
-      validator: (value) => ["male", "female", "other"].includes(value),
+      validator: (value) => ["male", "female", "other", ""].includes(value),
       message: "Invalid gender",
     },
   },
@@ -168,14 +165,6 @@ userSchema.statics.verifyUser = async function (userId) {
 };
 
 userSchema.pre("save", async function (next) {
-  const firstname =
-    this.firstname.slice(0, 1).toUpperCase() +
-    this.firstname.slice(1).toLowerCase();
-  const lastname =
-    this.lastname.slice(0, 1).toUpperCase() +
-    this.lastname.slice(1).toLowerCase();
-  this.firstname = firstname;
-  this.lastname = lastname;
   this.createdAt = dateNow();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
@@ -192,6 +181,13 @@ userSchema.pre("findOneAndUpdate", async (next) => {
       this.lastname.slice(1).toLowerCase();
     this.firstname = firstname;
     this.lastname = lastname;
+  }
+  if (this.password) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  if (this.picture) {
+    this.picture.uploadAt = dateNow();
   }
   next();
 });

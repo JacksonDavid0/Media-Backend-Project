@@ -4,6 +4,7 @@ const {
   verify,
   login,
   getUserProfile,
+  getViewedUserProfile,
   updateUserProfile,
   uploadProfilePicture,
   forgetPassword,
@@ -13,51 +14,16 @@ const {
 const userValidator = require("../middleware/user.validator");
 
 async function registerUser(req, res) {
-  const {
-    username,
-    firstname,
-    lastname,
-    gender,
-    email,
-    phone,
-    dob,
-    address,
-    password,
-  } = req.body;
+  const { username, email, password } = req.body;
 
   try {
     await userValidator({
       username,
-      firstname,
-      lastname,
-      gender,
       email,
-      phone,
-      dob,
-      address,
       password,
     });
 
-    let picture = {};
-    if (req.file) {
-      picture = {
-        filename: req.file.filename,
-        fileUrl: `/userUploads/${req.file.filename}`,
-      };
-    }
-
-    const user = await register(
-      username,
-      firstname,
-      lastname,
-      gender,
-      email,
-      phone,
-      dob,
-      address,
-      picture,
-      password
-    );
+    const user = await register(username, email, password);
     res.status(201).json(user);
   } catch (error) {
     handleError(req, res, error);
@@ -82,21 +48,23 @@ async function loginUser(req, res) {
   }
 }
 
-async function validateUser(req, res) {
-  const body = req.body;
+async function userProfile(req, res) {
+  const userId = req.authorizeUserId;
   try {
-    await userValidator(body);
-    return res.status(200).send();
+    const user = await getUserProfile(userId);
+    // console.log(user.Message);
+    return res.status(200).send(user);
   } catch (error) {
+    console.log(error);
     handleError(req, res, error);
   }
 }
 
-async function userProfile(req, res) {
+async function veiwUserProfile(req, res) {
   const { id } = req.params;
   const userId = req.authorizeUserId;
   try {
-    const user = await getUserProfile(id, userId);
+    const user = await getViewedUserProfile(id, userId);
     // console.log(user.Message);
     return res.status(200).send(user);
   } catch (error) {
@@ -122,37 +90,16 @@ async function updateProfile(req, res) {
 
     return res.status(400).json(error);
   }
-  const { username, firstname, lastname, gender, email, phone, dob, address } =
-    req.body;
+  const body = req.body;
   const userId = req.authorizeUserId;
-  const picture = {
+  body.picture = {
     filename: req.file.filename,
     fileUrl: `/postUploads/${req.file.filename}`,
   };
   try {
-    await userValidator({
-      username,
-      firstname,
-      lastname,
-      gender,
-      email,
-      phone,
-      dob,
-      address,
-      picture,
-    });
+    await userValidator(body);
 
-    const user = await updateUserProfile(
-      userId,
-      username,
-      firstname,
-      lastname,
-      gender,
-      email,
-      phone,
-      dob,
-      address
-    );
+    const user = await updateUserProfile(body, userId);
     res.status(200).send(user);
     // console.log(user.Message);
   } catch (error) {
@@ -160,21 +107,21 @@ async function updateProfile(req, res) {
   }
 }
 
-async function uploadPicture(req, res) {
-  try {
-    await userValidator({ picture: req.file.image });
-    const userId = req.authorizeUserId;
-    const user = await uploadProfilePicture(
-      userId,
-      req.file.filename,
-      `/userUploads/${req.file.filename}`
-    );
-    res.status(200).send(user);
-    // console.log(user.Message);
-  } catch (error) {
-    handleError(req, res, error);
-  }
-}
+// async function uploadPicture(req, res) {
+//   try {
+//     await userValidator({ picture: req.file.image });
+//     const userId = req.authorizeUserId;
+//     const user = await uploadProfilePicture(
+//       userId,
+//       req.file.filename,
+//       `/userUploads/${req.file.filename}`
+//     );
+//     res.status(200).send(user);
+//     // console.log(user.Message);
+//   } catch (error) {
+//     handleError(req, res, error);
+//   }
+// }
 
 async function forgettenPassword(req, res) {
   const { email } = req.body;
@@ -231,10 +178,9 @@ module.exports = {
   registerUser,
   verifyUser,
   loginUser,
-  validateUser,
   userProfile,
+  veiwUserProfile,
   updateProfile,
-  uploadPicture,
   forgettenPassword,
   confirmForgettenPasswordToken,
   resetForgettenPassword,

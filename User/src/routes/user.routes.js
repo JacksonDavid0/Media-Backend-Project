@@ -10,18 +10,19 @@ const {
   forgettenPassword,
   resetForgettenPassword,
   confirmForgettenPasswordToken,
-  validateUser,
+  veiwUserProfile,
 } = require("../controller/user.controller");
 const { authenticateUser } = require("../auth/user.authenticate");
 const { authUser } = require("../auth/authorizeUser");
 const { authorizeUser } = require("../auth/user.authorize");
 const userUpload = require("../middleware/user.upload");
 
-userRouter.post("/register", userUpload, authenticateUser, registerUser);
+userRouter.post("/register", authenticateUser, registerUser);
 userRouter.post("/login", authUser, loginUser);
-userRouter.post("/validate", authenticateUser, validateUser);
-userRouter.get("/profile/:id", authorizeUser, userProfile);
-userRouter.put("/profile/update", authorizeUser, userUpload, updateProfile);
+userRouter.get("/profile", authorizeUser, userProfile);
+userRouter.get("/profile/:id", authorizeUser, veiwUserProfile);
+// userRouter.get("/profile/upload", userUpload, authorizeUser, uploadPicture);
+userRouter.put("/profile/update", userUpload, authorizeUser, updateProfile);
 userRouter.post("/forget-Password", forgettenPassword);
 userRouter.get("/verifyUser/signature=:userId&:token", verifyUser);
 userRouter.get(
